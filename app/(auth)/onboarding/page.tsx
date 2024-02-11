@@ -10,8 +10,8 @@ import { X , Check} from 'lucide-react';
 import { useRef , useEffect } from 'react';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import axios from 'axios'
+import { useSession } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 interface OnboardingProps {}
 
@@ -25,12 +25,15 @@ const Onboarding: FC<OnboardingProps> = () => {
   const [usernamefromdb,setUsernamefromdb] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const router = useRouter();
+  const session_data = useSession();
+  console.log(session_data.session?.user.emailAddresses[0].emailAddress);
+  
     
   useEffect(() => {
 
     async function verifyUsername(){
         const username_data = await axios.post('/api/verifyUsername',{
-          username : newusername
+          username : newusername,
         });
         setUsernamefromdb(username_data.data.data[0]?.username);
       }
@@ -42,7 +45,7 @@ const Onboarding: FC<OnboardingProps> = () => {
 
   },[newusername]);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: any) => {
 
     e.preventDefault();
 
@@ -50,14 +53,15 @@ const Onboarding: FC<OnboardingProps> = () => {
       fullname : fullname,
       username : newusername,
       bio : bio,
-      profile_pic : image
+      profile_picture : image,
+      email : session_data.session?.user.emailAddresses[0].emailAddress
     });
     console.log(response); 
 
-    setFullname('');
-    setNewusername('');
-    setBio('');
-    setImage('');
+    // setFullname('');
+    // setNewusername('');
+    // setBio('');
+    // setImage('');
 
   };
 
@@ -201,7 +205,6 @@ const Onboarding: FC<OnboardingProps> = () => {
         required
       ></textarea>
 
-      <Link href='/'>
         <Button type='submit' className={fullname && newusername && bio && validUsername === 'Valid' ? 'w-full sm:w-[400px] bg-white text-black font-medium hover:bg-[#dadada] p-6 transition-all' : 'w-full sm:w-[400px] bg-[#bdbdbd] text-black font-medium hover:bg-[#c9c9c9] p-6 pointer-events-none'}
           onClick={() => {
             fullname && newusername && bio   // The toast will only be shown if username and bio field exists 
@@ -210,10 +213,10 @@ const Onboarding: FC<OnboardingProps> = () => {
               duration : 2000,
               className : 'bg-black text-white'
             });
+            router.push('/');
           }}>
             Continue
           </Button>
-      </Link>
 
     </form>
 

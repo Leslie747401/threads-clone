@@ -1,6 +1,5 @@
 'use client'
 
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useState , useEffect } from "react";
 import ProfileThread from "@/components/ProfileThread";
@@ -11,10 +10,9 @@ import { useMediaQuery } from "react-responsive";
 import { useSession } from "@clerk/nextjs";
 import axios from "axios";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import { Dialog, DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
 import { ProfileImageDialog } from "@/components/ProfileImageDialog";
 
-export default function Profile() {
+export default function UserProfilePage() {
 
   const [activeTab,setActiveTab] = useState('Threads');
   const isMobile = useMediaQuery({ maxWidth : 640 });
@@ -26,6 +24,7 @@ export default function Profile() {
   const [numberOfThreads,setNumberOfThreads] = useState();
   const [numberOfFollowers,setNumberOfFollowers] = useState();
   const [numberOfFollowing,setNumberOfFollowing] = useState();
+  const [followButton,setFollowButton] = useState(true);
 
   function changeActiveTab(tab : any){
       setActiveTab(tab);
@@ -99,7 +98,7 @@ export default function Profile() {
 
       <div className='flex justify-between mb-8 mx-5'>
         
-        <Button variant='outline' className={`w-[48%] rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]`}>Edit Profile</Button>
+        <Button variant='default' className={`${followButton === true ? 'w-[48%] bg-black hover:bg-black dark:bg-white dark:hover:bg-white rounded-xl' : 'w-[48%] bg-white text-black hover:bg-white dark:bg-[#121212] dark:hover:bg-[#121212] dark:text-white rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]'} `} onClick={() => setFollowButton(!followButton)}>{followButton ? 'Follow' : 'Following'}</Button>
 
         { isMobile ? <ShareDrawer/> : <ShareDialog/> }
       
@@ -140,3 +139,4 @@ export default function Profile() {
     </div>
   )
 }
+
