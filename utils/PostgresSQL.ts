@@ -1,8 +1,8 @@
 import pg from 'pg'
 
-const db = new pg.Pool({    // We can also Client instead of Pool but Pool give us the benefit of Connection Pooling      
+const db = new pg.Pool({    // We can also use Client instead of Pool but Pool give us the benefit of Connection Pooling      
     user : 'postgres',
-    host : 'threads-clone-black-five.vercel.app',
+    host : '127.0.0.1',
     // host : 'localhost',
     database : 'Threads',
     password : '12345',
