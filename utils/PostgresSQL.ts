@@ -2,7 +2,7 @@ import pg from 'pg'
 
 const db = new pg.Pool({    // We can also use Client instead of Pool but Pool give us the benefit of Connection Pooling      
     user : 'postgres',
-    host : 'localhost',
+    host : 'threads-clone-ten-ashen.vercel.app',
     database : 'Threads',
     password : '12345',
     port : 5432,
