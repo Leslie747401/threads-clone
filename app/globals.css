@@ -92,7 +92,7 @@ body{
 }
 
 .cl-userButtonPopoverActionButton__manageAccount{
-  /* display: none; */
+  display: none;
 }
 
 /* Loader */
