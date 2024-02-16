@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
 import { useState , useEffect } from "react";
 import ProfileThread from "@/components/ProfileThread";
 import ProfileReplies from "@/components/ProfileReplies";
@@ -11,6 +10,7 @@ import { useSession } from "@clerk/nextjs";
 import axios from "axios";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { ProfileImageDialog } from "@/components/ProfileImageDialog";
+import Loader from "@/components/Loader";
 
 export default function UserProfilePage() {
 
@@ -24,7 +24,9 @@ export default function UserProfilePage() {
   const [numberOfThreads,setNumberOfThreads] = useState();
   const [numberOfFollowers,setNumberOfFollowers] = useState();
   const [numberOfFollowing,setNumberOfFollowing] = useState();
-  const [followButton,setFollowButton] = useState(true);
+  // const [followButton,setFollowButton] = useState(true);
+  const [loading,setLoading] = useState(false);
+  const [buttontext,setButtontext] = useState('Follow');
 
   function changeActiveTab(tab : any){
       setActiveTab(tab);
@@ -54,7 +56,21 @@ export default function UserProfilePage() {
       getUserInfo();
     }
     
-  },[session_data.session])
+  },[session_data.session]);
+
+  function handlefollow(){
+    setLoading(true);
+    setTimeout(()=>{
+      if(buttontext=== 'Follow'){
+        setLoading(false);
+        setButtontext('Following');
+      }
+      else{
+        setLoading(false);
+        setButtontext('Follow');
+      }
+    },1500)
+  }
 
   return (
     <div className="sm:w-[40%] pt-[74px] sm:pt-12 pb-16">
@@ -98,7 +114,12 @@ export default function UserProfilePage() {
 
       <div className='flex justify-between mb-8 mx-5'>
         
-        <Button variant='default' className={`${followButton === true ? 'w-[48%] bg-black hover:bg-black dark:bg-white dark:hover:bg-white rounded-xl' : 'w-[48%] bg-white text-black hover:bg-white dark:bg-[#121212] dark:hover:bg-[#121212] dark:text-white rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]'} `} onClick={() => setFollowButton(!followButton)}>{followButton ? 'Follow' : 'Following'}</Button>
+        {/* <Button variant='default' className={`${followButton === true ? 'w-[48%] bg-black hover:bg-black dark:bg-white dark:hover:bg-white rounded-xl' : 'w-[48%] bg-white text-black hover:bg-white dark:bg-[#121212] dark:hover:bg-[#121212] dark:text-white rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]'} `} onClick={() => setFollowButton(!followButton)}>{followButton ? 'Follow' : 'Following'}</Button> */}
+
+        <button className={`${buttontext === 'Follow' ? 'w-[48%] bg-black hover:bg-black dark:bg-white dark:hover:bg-white  text-white dark:text-black rounded-xl' : 'w-[48%] bg-white text-black hover:bg-white dark:bg-[#121212] dark:hover:bg-[#121212] dark:text-white rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]'} `} onClick={handlefollow} disabled={loading}>
+          { loading ? <Loader/> : buttontext }
+        </button>
+
 
         { isMobile ? <ShareDrawer/> : <ShareDialog/> }
       

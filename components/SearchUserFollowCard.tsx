@@ -15,7 +15,7 @@ export default function SearchUserFollowCard(props : {image: string | StaticImpo
                 className='rounded-full'
             />
             <div className='flex-col font-medium'>
-                <p className='font-semibold'>{props.username}</p>
+                <p className='font-semibold text-[15px]'>{props.username}</p>
                 <p className='text-gray-400 text-sm dark:text-gray-500'>{props.fullname}</p>
             </div>
         </div>
