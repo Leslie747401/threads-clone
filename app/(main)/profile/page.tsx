@@ -13,14 +13,16 @@ import axios from "axios";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { Dialog, DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
 import { ProfileImageDialog } from "@/components/ProfileImageDialog";
+import { EditDrawer } from "@/components/EditDrawer";
+import { EditDialog } from "@/components/EditDialog";
 
 export default function Profile() {
 
   const [activeTab,setActiveTab] = useState('Threads');
   const isMobile = useMediaQuery({ maxWidth : 640 });
   const session_data = useSession();
-  const [fullname,setFullname] = useState();
-  const [username,setUsername] = useState();
+  const [fullname,setFullname] = useState('');
+  const [username,setUsername] = useState('');
   const [profile_picture,setProfilePicture] = useState<string | StaticImport>('');
   const [bio,setBio] = useState('');
   const [numberOfThreads,setNumberOfThreads] = useState();
@@ -99,7 +101,21 @@ export default function Profile() {
 
       <div className='flex justify-between mb-8 mx-5'>
         
-        <Button variant='outline' className={`w-[48%] rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]`}>Edit Profile</Button>
+        {/* <Button variant='outline' className={`w-[48%] rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]`}>Edit Profile</Button> */}
+
+        { isMobile ? 
+          <EditDrawer
+            editusername={username}
+            editfullname={fullname}
+            editimage={profile_picture}
+            editbio={bio}
+          /> 
+          
+          : 
+          
+          <EditDialog/>
+        
+        }
 
         { isMobile ? <ShareDrawer/> : <ShareDialog/> }
       

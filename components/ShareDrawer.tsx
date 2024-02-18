@@ -3,7 +3,7 @@ import Image from "next/image"
 import { useState , useEffect , useRef } from "react"
 import { Button } from "./ui/button"
 import {WhatsappShareButton , WhatsappIcon , TwitterShareButton , TwitterIcon , FacebookShareButton , FacebookIcon , LinkedinShareButton, LinkedinIcon, RedditShareButton, RedditIcon} from 'next-share'
-import { X } from "lucide-react"
+import { Check, X } from "lucide-react"
 import { useUrl } from 'nextjs-current-url';
 
 import {
@@ -19,6 +19,7 @@ export function ShareDrawer() {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const url = useUrl();
   let current_url = url?.href;
+  const [copiedIcon,setCopiedIcon] = useState(false);
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -30,6 +31,15 @@ export function ShareDrawer() {
   async function copyurl(){
     const url_text = document.querySelector('.url')?.innerHTML;
     await navigator.clipboard.writeText(url_text!);
+  }
+
+  // When the 'copy' button is clicked i set the copied icon to true "setCopiedIcon(true)" and run a setTimeout of 1 sec after which i set the copied icon to false "setCopiedIcon(false)"
+  function handleCopyBtnClick(){
+    copyurl();
+    setCopiedIcon(true);
+    setTimeout(() => {
+      setCopiedIcon(false);
+    }, 1000);
   }
 
   return (
@@ -91,7 +101,9 @@ export function ShareDrawer() {
 
         <div className="mb-10 mx-10 h-[60px] rounded-xl border-[0.5px] border-[#cecece] dark:border-[#333333] flex justify-between items-center p-3">
             <p className="text-sm w-[360px] h-[20px] overflow-hidden whitespace-nowrap text-ellipsis url">{current_url!}</p>
-            <button className="text-white bg-blue-600 rounded-3xl font-medium py-1.5 px-4" onClick={copyurl}>Copy</button>
+            <button className="text-white bg-blue-600 rounded-3xl font-medium w-[104px] h-[36px] flex justify-center items-center" onClick={handleCopyBtnClick}>
+              { copiedIcon ? <Check/> : 'Copy' }
+            </button>
         </div>
 
       </DrawerContent>
