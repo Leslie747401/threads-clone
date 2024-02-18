@@ -131,7 +131,7 @@ import {
 } from "@/components/ui/drawer"
 import { ArrowLeft, X } from "lucide-react"
 
-export function DrawerDemo() {
+export function CreateDrawer() {
 
   const [userThread, setUserThread] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);

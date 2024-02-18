@@ -36,7 +36,7 @@ export function ProfileImageDialog({imageurl} : ProfileDialogProps) {
 
       <DialogTrigger asChild>
 
-        <div className="w-[77px] h-[77px] sm:w-[84px] sm:h-[84px] relative">
+        <div className="w-[75px] h-[75px] sm:w-[84px] sm:h-[84px] relative">
             <Image
             src={imageurl} // src={profile_picture} use this after fixing the production issue of uploadthing
             fill

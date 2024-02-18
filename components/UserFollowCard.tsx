@@ -15,7 +15,7 @@ export default function UserFollowCard(props : {image: string | StaticImport , f
                 className='rounded-full'
             />
             <div className='flex-col'>
-                <p className='font-semibold text-[15px]'>{props.username}</p>
+                <p className='font-medium text-[15px]'>{props.username}</p>
                 <p className='text-gray-400 text-sm dark:text-gray-500 font-medium'>{props.fullname}</p>
             </div>
         </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { FC, useState, FormEvent } from 'react';
+import React, { FC, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/components/ui/use-toast"
 import { UploadButton} from "@/utils/uploadthing";

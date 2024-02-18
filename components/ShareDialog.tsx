@@ -4,6 +4,8 @@ import { Button } from "./ui/button"
 import {WhatsappShareButton , WhatsappIcon , TwitterShareButton , TwitterIcon , FacebookShareButton , FacebookIcon , LinkedinShareButton, LinkedinIcon, RedditShareButton, RedditIcon} from 'next-share'
 import { useUrl } from 'nextjs-current-url';
 import { X } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
+
 
 import {
   Dialog,
@@ -16,10 +18,16 @@ export function ShareDialog() {
 
   const url = useUrl();
   let current_url = url?.href;
+  const { toast } = useToast();
 
   async function copyurl(){
     const url_text = document.querySelector('.url')?.innerHTML;
     await navigator.clipboard.writeText(url_text!);
+    toast({
+      description: "Link copied to clipboard",
+      duration : 1000,
+      className : 'bg-white text-black dark:bg-black dark:text-white outline-none'
+    });
   }
 
   return (
@@ -79,7 +87,9 @@ export function ShareDialog() {
 
         <div className="mb-10 mx-10 h-[60px] rounded-xl border-[0.5px] border-[#cecece] dark:border-[#333333] flex justify-between items-center p-3">
             <p className="text-sm w-[360px] h-[20px] overflow-hidden whitespace-nowrap text-ellipsis url">{current_url!}</p>
-            <button className="text-white bg-blue-600 rounded-3xl font-medium py-1.5 px-4" onClick={copyurl}>Copy</button>
+            <button className="text-white bg-blue-600 rounded-3xl font-medium py-1.5 px-4" onClick={copyurl}> 
+              Copy
+              </button>
         </div>
 
       </DialogContent>

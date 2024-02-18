@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { DrawerDemo } from "./MyDrawer";
+import { CreateDrawer } from "./CreateDrawer";
 import { useMediaQuery } from "react-responsive";
 
 export default function MobileFooter() {
@@ -93,7 +93,7 @@ export default function MobileFooter() {
               </Link>
             </li>
 
-            <DrawerDemo/>
+            <CreateDrawer/>
 
             <li>
               <Link href='/profile'>            

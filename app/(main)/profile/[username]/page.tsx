@@ -12,7 +12,7 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { ProfileImageDialog } from "@/components/ProfileImageDialog";
 import Loader from "@/components/Loader";
 
-export default function UserProfilePage() {
+export default function UserProfilePage({params} : {params : {username : string}}) {
 
   const [activeTab,setActiveTab] = useState('Threads');
   const isMobile = useMediaQuery({ maxWidth : 640 });
@@ -27,6 +27,7 @@ export default function UserProfilePage() {
   // const [followButton,setFollowButton] = useState(true);
   const [loading,setLoading] = useState(false);
   const [buttontext,setButtontext] = useState('Follow');
+  console.log(params);
 
   function changeActiveTab(tab : any){
       setActiveTab(tab);
@@ -36,7 +37,7 @@ export default function UserProfilePage() {
 
     async function getUserInfo(){
       const response = await axios.post('/api/getUserData',{
-        email : session_data.session?.user.emailAddresses[0].emailAddress
+        username : params.username
       });
       console.log(response.data.thread[0].count);
       console.log(response.data.followers[0].count);

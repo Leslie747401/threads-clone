@@ -21,10 +21,18 @@ export function Toaster() {
           <Toast key={id} {...props}>
             <div className="flex items-center gap-4">
               <Image
-              src='/assets/images/toast-checkmark.png'
-              width={28}
-              height={28}
-              alt="tick icon"
+                src='/assets/images/white-toast-checkmark.png'
+                width={28}
+                height={28}
+                alt="tick icon"
+                className="hidden dark:block"
+              />
+              <Image
+                src='/assets/images/black-toast-checkmark.png'
+                width={28}
+                height={28}
+                alt="tick icon"
+                className="dark:hidden"
               />
               {description && (
                 <ToastDescription className="text-[17px]">{description}</ToastDescription>

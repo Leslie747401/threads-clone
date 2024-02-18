@@ -34,7 +34,7 @@ export default function Profile() {
   useEffect(() => {
 
     async function getUserInfo(){
-      const response = await axios.post('/api/getUserData',{
+      const response = await axios.post('/api/getProfileData',{
         email : session_data.session?.user.emailAddresses[0].emailAddress
       });
       console.log(response.data.thread[0].count);
