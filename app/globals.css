@@ -188,14 +188,14 @@ body{
   /* height: 1em; */
 }
  
-.spinner.center {
+/* .spinner.center {
   position: relative;
   left: 0;
   right: 0;
   top: 20%;
   bottom: 0;
   margin: auto;
-}
+} */
 
 
 .spinner .spinner-blade {

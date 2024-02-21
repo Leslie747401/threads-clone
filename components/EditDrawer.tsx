@@ -12,23 +12,70 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { StaticImport } from "next/dist/shared/lib/get-img-props"
+import { UploadButton} from "@/utils/uploadthing";
+import Loader from "./Loader"
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
-export function EditDrawer(props : {editimage: string | StaticImport , editfullname : string , editusername : string, editbio : string}) {
+export function EditDrawer(props : {editImage: string | StaticImport , editFullname : string , editUsername : string, editBio : string, currentUsername : string}) {
 
-  const [userThread, setUserThread] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [postImage,setPostImage] = useState<string>();
+  
+  const [newImage,setNewImage] = useState(props.editImage);
+
+  const [newFullname,setNewFullname] = useState(props.editFullname);
+  
+  const bioWithLineBreaks = props.editBio.replace(/<br\s*[/]?>/gi, '\n');
+  const [newBio,setNewBio] = useState(bioWithLineBreaks);
+  
+  const [dropdown,setDropdown] = useState(false);
+
+  const [openDrawer,setOpenDrawer] = useState(false);
+
+  const [loading,setLoading] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (textAreaRef.current) {
-      textAreaRef.current.style.height = 'auto';
+      textAreaRef.current.style.height = '24px';
       textAreaRef.current.style.height = textAreaRef.current.scrollHeight + 'px';
     }
-  },[userThread]);  
+  },[newBio]);
+
+  function handleCancel(){
+    setNewFullname(props.editFullname);
+    setNewBio(bioWithLineBreaks);
+    setNewImage(props.editImage);
+    setDropdown(false); // If i close the dialog when the dropdown is open then when i open the dialog again the dropdown is already open.
+  }
+
+  async function handleDone(){
+
+    setLoading(true);
+
+    // setTimeout(()=>{
+    //     setLoading(false);
+    //     setOpenDrawer(false);
+    // },10000);
+
+    const response = await axios.post('/api/editProfile',{
+      image : newImage,
+      fullname : newFullname,
+      bio : newBio,
+      currentUser : props.currentUsername
+    })
+
+    if(response){
+      setLoading(false);
+      setOpenDrawer(false);
+      window.location.reload();
+    }
+  }
 
   return (
     // dismissible = false is used to disable dragging of the drawer
-    <Drawer dismissible={false}>
+    <Drawer dismissible={false} open={openDrawer} onOpenChange={setOpenDrawer}>
 
       <DrawerTrigger asChild>
             
@@ -40,13 +87,13 @@ export function EditDrawer(props : {editimage: string | StaticImport , editfulln
 
         <div className="flex justify-between p-6 px-8">
   
-          <DrawerClose asChild>
-            <p className="cursor-pointer">Cancel</p>
+          <DrawerClose asChild onClick={handleCancel}>
+            <p className="cursor-pointer w-[52px] flex justify-center items-center">{loading ? <Loader/> : 'Cancel'}</p>
           </DrawerClose>
   
           <p className="font-medium">Edit Profile</p>
   
-          <button className="text-blue-500">Done</button>
+          <button className='text-blue-500 w-[52px] flex justify-center items-center' onClick={handleDone} >{loading ? <Loader/> : 'Done'}</button>
 
         </div>
 
@@ -54,23 +101,24 @@ export function EditDrawer(props : {editimage: string | StaticImport , editfulln
 
         <div className="w-full h-full flex justify-center items-center mx-auto bg-[#FAFAFA] dark:bg-black">
 
-            <div className="w-[90%] border border-[#d7d7d7] dark:border-[#464646] bg-white dark:bg-[#121212] rounded-xl p-6 space-y-3">
+            <div className="w-[90%] border border-[#d7d7d7] dark:border-[#464646] bg-white dark:bg-[#121212] rounded-xl p-6 flex flex-col gap-3">
 
                 <div className="flex justify-between">
                     <div className="space-y-1">
                         <p className="font-medium">Username</p>
                         <div className="flex items-center gap-2">
                             <Lock height={18} width={18}/>                    
-                            <p className="font-light">{props.editusername}</p>
+                            <p>{props.editUsername}</p>
                         </div>
                     </div>
 
                     <Image
-                        src={props.editimage}
+                        src={newImage}
                         width={55}
                         height={55}
                         alt="profile_picture"
                         className="rounded-full"
+                        onClick={() => setDropdown(!dropdown)}
                     />
                 </div>
 
@@ -78,15 +126,59 @@ export function EditDrawer(props : {editimage: string | StaticImport , editfulln
 
                 <div className="pb-3 border-b border-[#d7d7d7] dark:border-[#464646] space-y-1">
                     <p className="font-medium">Fullname</p>                  
-                    <p className="font-light">{props.editfullname}</p>
+                    {/* <p className="font-light">{props.editfullname}</p> */}
+                    <input type="text" className="w-full outline-none dark:bg-[#121212]" value={newFullname} onChange={(e) => setNewFullname(e.target.value)} maxLength={21} required/>
                 </div>
 
                 <div className="space-y-1">
                     <p className="font-medium">Bio</p>                 
-                    <p className="font-light" dangerouslySetInnerHTML={{ __html : props.editbio }}></p>
+                    {/* <p className="font-light" dangerouslySetInnerHTML={{ __html : props.editbio }}></p> */}
+                    <textarea className="w-full resize-none overflow-hidden outline-none dark:bg-[#121212]" value={newBio} onChange={(e)=>{setNewBio(e.target.value)}} ref={textAreaRef} required></textarea>
                 </div>
 
-            </div>        
+            </div>  
+
+            {
+                dropdown &&
+                <div className="absolute top-[267px] right-12 flex flex-col shadow-xl rounded-xl border">
+                    {/* <button className="flex justify-start pl-4 pr-6 py-2 font-medium border-b">Upload picture</button> */}
+                    <UploadButton endpoint='imageUploader'
+                    
+                        onUploadProgress={()=>{
+                            setDropdown(false);
+                        }}
+
+                        onClientUploadComplete={(res) => {
+                        // Do something with the response
+                            console.log("Files: ", res);
+                            setNewImage(res[0].url);
+                        }}
+                        onUploadError={(error: Error) => {
+                            // Do something with the error.
+                            alert(`ERROR! ${error.message}`);
+                        }}
+
+                        appearance={{
+                        allowedContent : 'hidden',
+                        button : 'w-full flex justify-start p-4 py-6 font-medium border-b bg-white dark:bg-[#242424] text-black  dark:text-white rounded-none rounded-t-xl'
+                        }}
+
+                        content={{      
+                            button({ready}){
+                              if(ready)
+                              return <>
+                               Upload picture              
+                              </>
+                            },
+                          }}
+
+                    />
+                    <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#242424] rounded-b-xl" onClick={() => {
+                        setNewImage('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg');
+                        setDropdown(false);
+                    }}>Remove current picture</button>
+                </div>
+            }      
 
         </div>
 

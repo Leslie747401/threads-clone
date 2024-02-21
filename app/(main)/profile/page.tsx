@@ -105,15 +105,22 @@ export default function Profile() {
 
         { isMobile ? 
           <EditDrawer
-            editusername={username}
-            editfullname={fullname}
-            editimage={profile_picture}
-            editbio={bio}
+            editUsername={username}
+            editFullname={fullname}
+            editImage={profile_picture}
+            editBio={bio}
+            currentUsername={username} // I have to send the username of the current user so i can use it to in the WHERE conditiond of SQL query to update his details.
           /> 
           
           : 
           
-          <EditDialog/>
+          <EditDialog
+            editUsername={username}
+            editFullname={fullname}
+            editImage={profile_picture}
+            editBio={bio}
+            currentUsername={username} // I have to send the username of the current user so i can use it to in the WHERE conditiond of SQL query to update his details.
+          />
         
         }
 
