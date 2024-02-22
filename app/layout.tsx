@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { ClerkProvider} from '@clerk/nextjs'
 import './globals.css'
 import { Toaster } from "@/components/ui/toaster"
+import Providers from './Redux/Providers'
 
 const font = Inter({ subsets: ['latin'] })
 
@@ -17,26 +18,28 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider
-        appearance={{
-            elements: {
-                formButtonPrimary: {
-                  backgroundColor: "black",
-                  color: "white",
-                  "&:hover" : {
-                    backgroundColor : '#423E3B'
-                  }
+    <Providers>
+      <ClerkProvider
+          appearance={{
+              elements: {
+                  formButtonPrimary: {
+                    backgroundColor: "black",
+                    color: "white",
+                    "&:hover" : {
+                      backgroundColor : '#423E3B'
+                    }
+                },
               },
-            },
-        }}
-      >
-      <html lang="en">
-        <body className={`${font.className} box-border`}>
-          {children}
-          <Toaster/>
-        </body>
-      </html>
-    </ClerkProvider>
+          }}
+        >
+        <html lang="en">
+          <body className={`${font.className} box-border`}>
+            {children}
+            <Toaster/>
+          </body>
+        </html>
+      </ClerkProvider>
+    </Providers>
   )
 }
 

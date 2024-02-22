@@ -15,19 +15,28 @@ import { Dialog, DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
 import { ProfileImageDialog } from "@/components/ProfileImageDialog";
 import { EditDrawer } from "@/components/EditDrawer";
 import { EditDialog } from "@/components/EditDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/Redux/store";
+import { setBio, setFullname, setProfilePicture, setUsername } from "@/app/Redux/States/ProfileState/ProfileSlice";
 
 export default function Profile() {
 
   const [activeTab,setActiveTab] = useState('Threads');
   const isMobile = useMediaQuery({ maxWidth : 640 });
   const session_data = useSession();
-  const [fullname,setFullname] = useState('');
-  const [username,setUsername] = useState('');
-  const [profile_picture,setProfilePicture] = useState<string | StaticImport>('');
-  const [bio,setBio] = useState('');
+  // const [fullname,setFullname] = useState('');
+  // const [username,setUsername] = useState('');
+  // const [profile_picture,setProfilePicture] = useState<string | StaticImport>('');
+  // const [bio,setBio] = useState('');
   const [numberOfThreads,setNumberOfThreads] = useState();
   const [numberOfFollowers,setNumberOfFollowers] = useState();
   const [numberOfFollowing,setNumberOfFollowing] = useState();
+  const username = useSelector((state : RootState) => state.profileData.username);
+  const fullname = useSelector((state : RootState) => state.profileData.fullname);
+  const profile_picture = useSelector((state : RootState) => state.profileData.profile_picture);
+  const bio = useSelector((state : RootState) => state.profileData.bio);
+  const dispatch = useDispatch();
+  
 
   function changeActiveTab(tab : any){
       setActiveTab(tab);
@@ -39,14 +48,21 @@ export default function Profile() {
       const response = await axios.post('/api/getProfileData',{
         email : session_data.session?.user.emailAddresses[0].emailAddress
       });
+
       console.log(response.data.thread[0].count);
       console.log(response.data.followers[0].count);
       console.log(response.data.following[0].count);
       console.log(response.data.user[0]);
-      setFullname(response.data.user[0].fullname);
-      setUsername(response.data.user[0].username);
-      setProfilePicture(response.data.user[0].profile_picture);
-      setBio(response.data.user[0].bio);
+
+      // setUsername(response.data.user[0].username);
+      // setFullname(response.data.user[0].fullname);
+      // setProfilePicture(response.data.user[0].profile_picture);
+      // setBio(response.data.user[0].bio);
+      dispatch(setUsername(response.data.user[0].username));
+      dispatch(setFullname(response.data.user[0].fullname));
+      dispatch(setProfilePicture(response.data.user[0].profile_picture));
+      dispatch(setBio(response.data.user[0].bio));
+
       setNumberOfThreads(response.data.thread[0].count); 
       setNumberOfFollowers(response.data.followers[0].count); 
       setNumberOfFollowing(response.data.following[0].count); 
@@ -103,26 +119,7 @@ export default function Profile() {
         
         {/* <Button variant='outline' className={`w-[48%] rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]`}>Edit Profile</Button> */}
 
-        { isMobile ? 
-          <EditDrawer
-            editUsername={username}
-            editFullname={fullname}
-            editImage={profile_picture}
-            editBio={bio}
-            currentUsername={username} // I have to send the username of the current user so i can use it to in the WHERE conditiond of SQL query to update his details.
-          /> 
-          
-          : 
-          
-          <EditDialog
-            editUsername={username}
-            editFullname={fullname}
-            editImage={profile_picture}
-            editBio={bio}
-            currentUsername={username} // I have to send the username of the current user so i can use it to in the WHERE conditiond of SQL query to update his details.
-          />
-        
-        }
+        { isMobile ? <EditDrawer/> : <EditDialog/> }
 
         { isMobile ? <ShareDrawer/> : <ShareDialog/> }
       

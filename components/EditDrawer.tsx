@@ -11,21 +11,29 @@ import {
   DrawerContent,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { StaticImport } from "next/dist/shared/lib/get-img-props"
 import { UploadButton} from "@/utils/uploadthing";
 import Loader from "./Loader"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import { RootState } from "@/app/Redux/store"
+import { useDispatch, useSelector } from "react-redux"
+import { setBio, setFullname, setProfilePicture } from "@/app/Redux/States/ProfileState/ProfileSlice"
 
-export function EditDrawer(props : {editImage: string | StaticImport , editFullname : string , editUsername : string, editBio : string, currentUsername : string}) {
+export function EditDrawer() {
+
+  const username = useSelector((state : RootState) => state.profileData.username);
+  const fullname = useSelector((state : RootState) => state.profileData.fullname);
+  const profile_picture = useSelector((state : RootState) => state.profileData.profile_picture);
+  const bio = useSelector((state : RootState) => state.profileData.bio);
+  const dispatch = useDispatch();
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   
-  const [newImage,setNewImage] = useState(props.editImage);
+  const [newImage,setNewImage] = useState(profile_picture);
 
-  const [newFullname,setNewFullname] = useState(props.editFullname);
+  const [newFullname,setNewFullname] = useState(fullname);
   
-  const bioWithLineBreaks = props.editBio.replace(/<br\s*[/]?>/gi, '\n');
+  const bioWithLineBreaks = bio.replace(/<br\s*[/]?>/gi, '\n');
   const [newBio,setNewBio] = useState(bioWithLineBreaks);
   
   const [dropdown,setDropdown] = useState(false);
@@ -34,19 +42,17 @@ export function EditDrawer(props : {editImage: string | StaticImport , editFulln
 
   const [loading,setLoading] = useState(false);
 
-  const router = useRouter();
-
   useEffect(() => {
     if (textAreaRef.current) {
-      textAreaRef.current.style.height = '24px';
+      textAreaRef.current.style.height = 'auto';
       textAreaRef.current.style.height = textAreaRef.current.scrollHeight + 'px';
     }
   },[newBio]);
 
   function handleCancel(){
-    setNewFullname(props.editFullname);
+    setNewFullname(fullname);
     setNewBio(bioWithLineBreaks);
-    setNewImage(props.editImage);
+    setNewImage(profile_picture);
     setDropdown(false); // If i close the dialog when the dropdown is open then when i open the dialog again the dropdown is already open.
   }
 
@@ -63,13 +69,16 @@ export function EditDrawer(props : {editImage: string | StaticImport , editFulln
       image : newImage,
       fullname : newFullname,
       bio : newBio,
-      currentUser : props.currentUsername
+      currentUser : username
     })
 
     if(response){
       setLoading(false);
       setOpenDrawer(false);
-      window.location.reload();
+      dispatch(setFullname(newFullname));
+      const bioWithLineBreaks = newBio.replace(/\n/g, '<br/>');
+      dispatch(setBio(bioWithLineBreaks));
+      dispatch(setProfilePicture(newImage));
     }
   }
 
@@ -108,7 +117,7 @@ export function EditDrawer(props : {editImage: string | StaticImport , editFulln
                         <p className="font-medium">Username</p>
                         <div className="flex items-center gap-2">
                             <Lock height={18} width={18}/>                    
-                            <p>{props.editUsername}</p>
+                            <p>{username}</p>
                         </div>
                     </div>
 
