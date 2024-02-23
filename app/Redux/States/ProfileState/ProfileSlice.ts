@@ -2,7 +2,6 @@
 
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { StaticImport } from 'next/dist/shared/lib/get-img-props'
 
 export interface ProfileState {
   username : string,

@@ -2,7 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 
 export default function ActivityReplies() {
-
+ 
   return (
     <>
         <div className="sm:w-full flex items-start gap-3 mx-5 mt-4">

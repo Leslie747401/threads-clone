@@ -6,15 +6,7 @@ import { useUrl } from 'nextjs-current-url';
 import { X } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { Check } from "lucide-react";
-
-
-
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { useState } from "react";
 
 export function ShareDialog() {

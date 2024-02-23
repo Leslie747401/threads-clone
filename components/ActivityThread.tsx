@@ -9,6 +9,7 @@ export default function ActivityThread() {
 
   useEffect(() => {
     
+    // It updates broder height (which looks like a thread) based on the height of the image and text in the thread.
     const updateBorderHeight = () => {
         if (contentRef.current) {
           const contentHeight = contentRef.current.clientHeight;

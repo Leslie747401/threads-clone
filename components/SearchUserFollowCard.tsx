@@ -11,8 +11,8 @@ export default function SearchUserFollowCard(props : {image: string | StaticImpo
         <div className='flex gap-4 sm:gap-5'>
             <Image
                 src={props.image}
-                width={45}   // 45
-                height={45}  // 45
+                width={45} 
+                height={45}  
                 alt='prfile-icon'
                 className='rounded-full'
             />

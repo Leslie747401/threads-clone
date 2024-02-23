@@ -31,7 +31,7 @@ export default function HomeTabs() {
             <p className={`w-[50%] flex justify-center border-b-[1px] pb-2 cursor-pointer font-medium ${activeTab === 'Following' ? 'border-black text-black dark:border-white dark:text-white' : 'text-gray-400'}`} onClick={() => changeActiveTab('Following')}>Following</p>
 
           </div>
-        }
+        } 
     </>
   )
 }

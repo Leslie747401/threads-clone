@@ -1,32 +1,15 @@
-import * as React from "react"
-import Image from "next/image"
-import { useState , useEffect , useRef } from "react"
+import { useState } from "react"
 import { Button } from "./ui/button"
 import {WhatsappShareButton , WhatsappIcon , TwitterShareButton , TwitterIcon , FacebookShareButton , FacebookIcon , LinkedinShareButton, LinkedinIcon, RedditShareButton, RedditIcon} from 'next-share'
-import { Check, X } from "lucide-react"
+import { Check } from "lucide-react"
 import { useUrl } from 'nextjs-current-url';
-
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
+import { Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer"
 
 export function ShareDrawer() {
 
-  const [userThread, setUserThread] = useState<string>('');
-  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const url = useUrl();
   let current_url = url?.href;
   const [copiedIcon,setCopiedIcon] = useState(false);
-
-  useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = 'auto';
-      textAreaRef.current.style.height = textAreaRef.current.scrollHeight + 'px';
-    }
-  },[userThread]);  
 
   async function copyurl(){
     const url_text = document.querySelector('.url')?.innerHTML;
@@ -57,9 +40,6 @@ export function ShareDrawer() {
         
       <div className="p-8 px-10 flex justify-between items-center">
             <p className="font-medium text-xl">Share Profile</p>
-            {/* <DrawerClose>
-                <X width={25} height={25}/>
-            </DrawerClose> */}
         </div>
 
         <div className="pb-8 px-12 flex justify-between">

@@ -16,6 +16,7 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   
+  // Layout for SignIn , SignUp and Onboarding Page 
   return (
       <html lang="en">
         <body className={`${inter.className}`} style={{ backgroundImage: `url('/assets/images/background.png')`, display : 'flex' , height : '100vh' , alignItems : 'center' , justifyContent : 'center' , boxSizing : 'border-box'}}>

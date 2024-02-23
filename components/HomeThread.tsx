@@ -120,7 +120,7 @@ export default function HomeThread() {
           </div>
     
         </div>
-    
+     
         {/* 3 icons , replies and likes */}
         <div className="flex gap-[15px] ml-5 mb-4">
 

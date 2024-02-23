@@ -185,7 +185,7 @@ body{
   display: inline-block;
   width: 1em;
   top: 50%;
-  /* height: 1em; */
+  height: 1em;
 }
  
 /* .spinner.center {

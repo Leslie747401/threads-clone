@@ -206,7 +206,7 @@ export function CreateDrawer() {
           <textarea placeholder="Start a thread..." rows={1} className="bg-white dark:bg-[#171717] outline-none resize-none overflow-hidden mb-2 placeholder:text-[#afafaf]  dark:placeholder:text-[#7a7a7a]" value={userThread} onChange={(e) => setUserThread(e.target.value)} ref={textAreaRef} required/>
 
           { postImage ? 
-
+ 
             <div className="w-fit relative border border-[#d1d1d1] rounded-xl">
               <img
                 src={postImage}

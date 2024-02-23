@@ -5,16 +5,10 @@ import { useState , useEffect , useRef } from "react"
 import { Button } from "./ui/button"
 import { Lock } from "lucide-react"
 
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
 import { UploadButton} from "@/utils/uploadthing";
 import Loader from "./Loader"
 import axios from "axios"
-import { useRouter } from "next/navigation"
 import { RootState } from "@/app/Redux/store"
 import { useDispatch, useSelector } from "react-redux"
 import { setBio, setFullname, setProfilePicture } from "@/app/Redux/States/ProfileState/ProfileSlice"
@@ -60,7 +54,7 @@ export function EditDrawer() {
 
     setLoading(true);
 
-    // setTimeout(()=>{
+    // setTimeout(()=>{                Fake Delay
     //     setLoading(false);
     //     setOpenDrawer(false);
     // },10000);
@@ -135,13 +129,11 @@ export function EditDrawer() {
 
                 <div className="pb-3 border-b border-[#d7d7d7] dark:border-[#464646] space-y-1">
                     <p className="font-medium">Fullname</p>                  
-                    {/* <p className="font-light">{props.editfullname}</p> */}
                     <input type="text" className="w-full outline-none dark:bg-[#121212]" value={newFullname} onChange={(e) => setNewFullname(e.target.value)} maxLength={21} required/>
                 </div>
 
                 <div className="space-y-1">
                     <p className="font-medium">Bio</p>                 
-                    {/* <p className="font-light" dangerouslySetInnerHTML={{ __html : props.editbio }}></p> */}
                     <textarea className="w-full resize-none overflow-hidden outline-none dark:bg-[#121212]" value={newBio} onChange={(e)=>{setNewBio(e.target.value)}} ref={textAreaRef} required></textarea>
                 </div>
 
@@ -150,7 +142,7 @@ export function EditDrawer() {
             {
                 dropdown &&
                 <div className="absolute top-[267px] right-12 flex flex-col shadow-xl rounded-xl border">
-                    {/* <button className="flex justify-start pl-4 pr-6 py-2 font-medium border-b">Upload picture</button> */}
+                    
                     <UploadButton endpoint='imageUploader'
                     
                         onUploadProgress={()=>{
@@ -182,6 +174,7 @@ export function EditDrawer() {
                           }}
 
                     />
+
                     <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#242424] rounded-b-xl" onClick={() => {
                         setNewImage('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg');
                         setDropdown(false);

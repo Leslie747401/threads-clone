@@ -25,12 +25,11 @@ const Onboarding: FC<OnboardingProps> = () => {
   const [usernamefromdb,setUsernamefromdb] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const router = useRouter();
-  const session_data = useSession();
-  console.log(session_data.session?.user.emailAddresses[0].emailAddress);
-  
+  const session_data = useSession();  
     
   useEffect(() => {
 
+    // Checks whether the username entered by the user already exists in the Database.
     async function verifyUsername(){
         const username_data = await axios.post('/api/verifyUsername',{
           username : newusername,
@@ -38,17 +37,18 @@ const Onboarding: FC<OnboardingProps> = () => {
         setUsernamefromdb(username_data.data.data[0]?.username);
       }
 
-
+    // It is only called when the username text field has some text in it and not empty.
     if(newusername){
       verifyUsername();
     }
 
-  },[newusername]);
+  },[newusername]); // Called every time the value of the text changes.
 
   const handleSubmit = async (e: any) => {
 
     e.preventDefault();
 
+    // Storing the Onboarding user's data in Database.
     const response = await axios.post('/api/postOnboardingDetails', {
       fullname : fullname,
       username : newusername,
@@ -56,15 +56,10 @@ const Onboarding: FC<OnboardingProps> = () => {
       profile_picture : image,
       email : session_data.session?.user.emailAddresses[0].emailAddress
     });
-    console.log(response); 
-
-    // setFullname('');
-    // setNewusername('');
-    // setBio('');
-    // setImage('');
 
   };
 
+  // It is used to resize (go to new line) the textarea field when it exceeds the width of textarea or when we press enter. 
   useEffect(() => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = 'auto';
@@ -72,6 +67,7 @@ const Onboarding: FC<OnboardingProps> = () => {
     }
   },[bio]);
 
+  // Checks for the uniqueness of the username (if it already exists then the state is set to invalid and if not then the state is set to valid)
   useEffect(() => {
       function uniqueUsername(){
             
@@ -205,9 +201,9 @@ const Onboarding: FC<OnboardingProps> = () => {
         required
       ></textarea>
 
-        <Button type='submit' className={fullname && newusername && bio && validUsername === 'Valid' ? 'w-full sm:w-[400px] bg-white text-black font-medium hover:bg-[#dadada] p-6 transition-all' : 'w-full sm:w-[400px] bg-[#bdbdbd] text-black font-medium hover:bg-[#c9c9c9] p-6 pointer-events-none'}
+        <Button type='submit' className={fullname && newusername && bio && image && validUsername === 'Valid' ? 'w-full sm:w-[400px] bg-white text-black font-medium hover:bg-[#dadada] p-6 transition-all' : 'w-full sm:w-[400px] bg-[#bdbdbd] text-black font-medium hover:bg-[#c9c9c9] p-6 pointer-events-none'}
           onClick={() => {
-            fullname && newusername && bio   // The toast will only be shown if username and bio field exists 
+            fullname && newusername && bio && image   // The toast will only be shown if fullname, username , bio and image field exists 
             toast({
               description: "Welcome Aboard",
               duration : 2000,

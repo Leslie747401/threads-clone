@@ -16,5 +16,5 @@ export default function loader() {
         <div className="spinner-blade"></div>
         <div className="spinner-blade"></div>
     </div>    
-  )
+  ) 
 }

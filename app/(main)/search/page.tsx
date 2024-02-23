@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import { useSession } from '@clerk/nextjs';
+
 interface UserData {
   username : string;
   fullname : string;
@@ -20,12 +21,13 @@ export default function Search() {
   const session_data = useSession();
   const session_email = session_data.session?.user.emailAddresses[0].emailAddress;
 
+  // It fetches all the Users from the database. In my case, i only have 3 users in the database so im fetching them all but practically we will limit this to 5-8 users only.
   useEffect(()=>{
     async function allUsers(){
       const response = await axios.post('/api/allUsers',{
         email : session_email
       });
-      // console.log(response.data.data.rows);
+      
       setUsers(response.data.data.rows);
     }
 
@@ -34,7 +36,7 @@ export default function Search() {
   },[])
 
 
-
+  // it fetches the user based on the search input provided by the user
   useEffect(()=>{
 
     async function searchUser(){
@@ -69,6 +71,7 @@ export default function Search() {
       
       </div>
 
+      {/* All users (in my case 3 users) are displayed when the search field is empty and it is removed when the user starts typing to search for a specific user  */}
       {
         !searchText && users && users.map((user : UserData)=>(
           <SearchUserFollowCard
@@ -80,7 +83,7 @@ export default function Search() {
         ))
       }
     
-      
+      {/* It displays the user that is searched */}
       {
         searchText && searcheduser && 
           <SearchUserFollowCard

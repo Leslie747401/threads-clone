@@ -19,6 +19,7 @@ export function CreateDialog() {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const [postImage,setPostImage] = useState<string>();
 
+  // It is used to resize (go to new line) the textarea field when it exceeds the width of textarea or when we press enter. 
   useEffect(() => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = 'auto';
@@ -153,8 +154,8 @@ export function CreateDialog() {
 
         </div>
 
-
       </DialogContent>
+
     </Dialog>
   )
 }

@@ -3,19 +3,11 @@
 import { Button } from "./ui/button"
 import { Lock } from "lucide-react"
 import Image from "next/image"
-
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { StaticImport } from "next/dist/shared/lib/get-img-props"
+import { Dialog,  DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { useEffect, useRef, useState } from "react"
 import { UploadButton } from "@/utils/uploadthing"
 import Loader from "./Loader"
 import axios from "axios"
-import { useRouter } from "next/navigation"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/app/Redux/store"
 import { setBio, setFullname, setProfilePicture } from "@/app/Redux/States/ProfileState/ProfileSlice"
@@ -53,7 +45,7 @@ export function EditDialog() {
   async function handleDone(){
     setLoading(true);
 
-    // setTimeout(()=>{
+    // setTimeout(()=>{                Fake Delay
     //     setLoading(false);
     //     setOpenDrawer(false);
     // },2000);
@@ -94,9 +86,6 @@ export function EditDialog() {
             dispatch(setFullname(username));
             dispatch(setBio(bio));
             dispatch(setProfilePicture(profile_picture));
-            // setNewFullname(props.editFullname);
-            // setNewBio(bioWithLineBreaks);
-            // setNewImage(props.editImage);
             setDropdown(false); // If i close the dialog when the dropdown is open then when i open the dialog again the dropdown is already open.
           }
       }}>
@@ -142,7 +131,7 @@ export function EditDialog() {
             {
                 dropdown &&
                 <div className="absolute top-[81px] right-10 flex flex-col shadow-xl rounded-xl border border-[#c9c9c9] dark:border-[#5a5a5a]">
-                    {/* <button className="flex justify-start pl-4 pr-6 py-2 font-medium border-b">Upload picture</button> */}
+
                     <UploadButton endpoint='imageUploader'
                     
                         onUploadProgress={()=>{
@@ -174,6 +163,7 @@ export function EditDialog() {
                           }}
 
                     />
+
                     <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#242424] rounded-b-xl" onClick={() => {
                         setNewImage('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg');
                         setDropdown(false);

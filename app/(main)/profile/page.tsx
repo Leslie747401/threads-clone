@@ -1,7 +1,5 @@
 'use client'
 
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import { useState , useEffect } from "react";
 import ProfileThread from "@/components/ProfileThread";
 import ProfileReplies from "@/components/ProfileReplies";
@@ -10,62 +8,49 @@ import { ShareDrawer } from "@/components/ShareDrawer";
 import { useMediaQuery } from "react-responsive";
 import { useSession } from "@clerk/nextjs";
 import axios from "axios";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import { Dialog, DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
 import { ProfileImageDialog } from "@/components/ProfileImageDialog";
 import { EditDrawer } from "@/components/EditDrawer";
 import { EditDialog } from "@/components/EditDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/Redux/store";
 import { setBio, setFullname, setProfilePicture, setUsername } from "@/app/Redux/States/ProfileState/ProfileSlice";
+import Skeleton from "react-loading-skeleton";
 
 export default function Profile() {
 
   const [activeTab,setActiveTab] = useState('Threads');
   const isMobile = useMediaQuery({ maxWidth : 640 });
   const session_data = useSession();
-  // const [fullname,setFullname] = useState('');
-  // const [username,setUsername] = useState('');
-  // const [profile_picture,setProfilePicture] = useState<string | StaticImport>('');
-  // const [bio,setBio] = useState('');
   const [numberOfThreads,setNumberOfThreads] = useState();
   const [numberOfFollowers,setNumberOfFollowers] = useState();
   const [numberOfFollowing,setNumberOfFollowing] = useState();
   const username = useSelector((state : RootState) => state.profileData.username);
   const fullname = useSelector((state : RootState) => state.profileData.fullname);
-  const profile_picture = useSelector((state : RootState) => state.profileData.profile_picture);
   const bio = useSelector((state : RootState) => state.profileData.bio);
   const dispatch = useDispatch();
-  
-
-  function changeActiveTab(tab : any){
-      setActiveTab(tab);
-  }
+  const [skeletonLoading,setSkeletonLoading] = useState(true);
 
   useEffect(() => {
 
+    // It gets the profile data based on the email id
     async function getUserInfo(){
       const response = await axios.post('/api/getProfileData',{
         email : session_data.session?.user.emailAddresses[0].emailAddress
       });
 
-      console.log(response.data.thread[0].count);
-      console.log(response.data.followers[0].count);
-      console.log(response.data.following[0].count);
-      console.log(response.data.user[0]);
+      if(response){
 
-      // setUsername(response.data.user[0].username);
-      // setFullname(response.data.user[0].fullname);
-      // setProfilePicture(response.data.user[0].profile_picture);
-      // setBio(response.data.user[0].bio);
-      dispatch(setUsername(response.data.user[0].username));
-      dispatch(setFullname(response.data.user[0].fullname));
-      dispatch(setProfilePicture(response.data.user[0].profile_picture));
-      dispatch(setBio(response.data.user[0].bio));
+        setSkeletonLoading(false);
 
-      setNumberOfThreads(response.data.thread[0].count); 
-      setNumberOfFollowers(response.data.followers[0].count); 
-      setNumberOfFollowing(response.data.following[0].count); 
+        dispatch(setUsername(response.data.user[0].username));
+        dispatch(setFullname(response.data.user[0].fullname));
+        dispatch(setProfilePicture(response.data.user[0].profile_picture));
+        dispatch(setBio(response.data.user[0].bio));
+  
+        setNumberOfThreads(response.data.thread[0].count); 
+        setNumberOfFollowers(response.data.followers[0].count); 
+        setNumberOfFollowing(response.data.following[0].count); 
+      }
     }
 
     // only if the session data is available, this function will be called.
@@ -80,24 +65,29 @@ export default function Profile() {
 
       <div className="flex justify-between items-center mb-3 mx-5">
 
-        {/* Sending the image as prop to the dialog component */}
-        <ProfileImageDialog
-          imageurl={profile_picture}
-        />
+        {
+          skeletonLoading ? 
+            
+            <Skeleton width={84} height={84} className="rounded-full"/> 
+          
+            : 
+            
+            <ProfileImageDialog/>
+        }
 
         <div className="w-[75%] flex justify-between">
           <div className="w-[30%] flex flex-col gap-1 items-center">
-            <p className="font-semibold">{numberOfThreads}</p>           {/* 916 */}
+            <p className="font-semibold">{skeletonLoading? <Skeleton width={25} height={25}/> : numberOfThreads}</p>           {/* 916 */}
             <p className="text-sm">Threads</p>
           </div>
           
           <div className="w-[30%] flex flex-col gap-1 items-center">
-            <p className="font-semibold">{numberOfFollowers}</p>         {/* 165 */}
+            <p className="font-semibold">{skeletonLoading? <Skeleton width={25} height={25}/> :  numberOfFollowers}</p>         {/* 165 */}
             <p className="text-sm">Followers</p>
           </div>
           
           <div className="w-[30%] flex flex-col gap-1 items-center">
-            <p className="font-semibold">{numberOfFollowing}</p>         {/* 303 */}
+            <p className="font-semibold">{skeletonLoading? <Skeleton width={25} height={25}/> : numberOfFollowing}</p>         {/* 303 */}
             <p className="text-sm">Following</p>
           </div>
         </div>
@@ -105,19 +95,15 @@ export default function Profile() {
       </div>
 
       <div className="flex gap-2 items-center mb-1 mx-5">
-        <p className="font-medium mb-[2px]">{fullname}</p>  {/* Leslie Dsilva */}
-        <p className="max-w-fit text-[12px] text-gray-600 bg-gray-200 dark:!text-gray-300 dark:bg-gray-600 p-[2px] px-2 rounded-xl">@{username}</p>  {/* @lesliedsilva7744 */}
+        <p className="font-medium mb-[2px]">{skeletonLoading? <Skeleton width={100} height={20}/> :  fullname}</p>      {/* Leslie Dsilva */}
+        <p className="max-w-fit text-[12px] text-gray-600 bg-gray-200 dark:!text-gray-300 dark:bg-gray-600 p-[2px] px-2 rounded-xl">@{skeletonLoading? <Skeleton width={100} height={10}/> :  username}</p>    {/* @lesliedsilva7744 */}
       </div>
 
       <div className="mb-6 mx-5">
-        {/* <p className="text-sm mb-[1px]">Living a quiet, beautiful life.</p> */}
-        {/* <p className="text-sm">Web Developer</p> */}
-        <p className="text-sm leading-[23px]" dangerouslySetInnerHTML={{ __html : bio }}></p>
+        {skeletonLoading? <Skeleton count={2} width={200} height={20}/> : <p className="text-sm leading-[23px]" dangerouslySetInnerHTML={{ __html : bio }}></p>}
       </div>
 
       <div className='flex justify-between mb-8 mx-5'>
-        
-        {/* <Button variant='outline' className={`w-[48%] rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]`}>Edit Profile</Button> */}
 
         { isMobile ? <EditDrawer/> : <EditDialog/> }
 
@@ -127,9 +113,9 @@ export default function Profile() {
 
       <div className="flex justify-between sm:mx-5">
         
-        <p className={`w-[50%] flex justify-center border-b-[1px] pb-2 cursor-pointer ${activeTab === 'Threads' ? 'border-black text-black dark:border-white dark:text-white' : 'text-gray-400'}`} onClick={() => changeActiveTab('Threads')}>Threads</p>
+        <p className={`w-[50%] flex justify-center border-b-[1px] pb-2 cursor-pointer ${activeTab === 'Threads' ? 'border-black text-black dark:border-white dark:text-white' : 'text-gray-400'}`} onClick={() => setActiveTab('Threads')}>Threads</p>
 
-        <p className={`w-[50%] flex justify-center border-b-[1px] pb-2 cursor-pointer ${activeTab === 'Replies' ? 'border-black text-black dark:border-white dark:text-white' : 'text-gray-400'}`} onClick={() => changeActiveTab('Replies')}>Replies</p>
+        <p className={`w-[50%] flex justify-center border-b-[1px] pb-2 cursor-pointer ${activeTab === 'Replies' ? 'border-black text-black dark:border-white dark:text-white' : 'text-gray-400'}`} onClick={() => setActiveTab('Replies')}>Replies</p>
 
       </div>
 

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter, Roboto } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import LeftsideBar from '@/components/LeftsideBar'
 import RightsideBar from '@/components/RightsideBar'
 import MobileNavbar from '@/components/MobileNavbar'
 import MobileFooter from '@/components/MobileFooter'
+import 'react-loading-skeleton/dist/skeleton.css'
+import ThemeSkeleton from '@/components/ThemeSkeleton'
 
 const font = Inter({ subsets: ['latin'] })
 
@@ -18,23 +20,26 @@ export default function MainLayout({
 }: {
   children: React.ReactNode
 }) {
+
   return (
-    <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-    >
-      <html lang="en">
-        <body className={font.className}>
-            <div className='sm:flex sm:justify-between'>
-              <MobileNavbar/>
-              <LeftsideBar/>
-                {children}
-              <RightsideBar/>
-              <MobileFooter/>
-            </div>
-        </body>
-      </html>
-    </ThemeProvider>
+      <ThemeProvider                     // The ThemeProvider should wrap all the components in it.
+          attribute="class"
+          defaultTheme="system"
+      >                                
+        <html lang="en">
+          <body className={font.className}>
+            <ThemeSkeleton>                              {/* Here , The ThemeSkeleton is a custom component that wraps around the components to provide skeleton loading. *NOTE* : This component should be placed inside the ThemeProvider component for it to work. */}          
+              <div className='sm:flex sm:justify-between'>
+                  <MobileNavbar/>
+                  <LeftsideBar/>
+                    {children}
+                  <RightsideBar/>
+                  <MobileFooter/>
+                </div>
+            </ThemeSkeleton> 
+          </body>
+        </html>
+      </ThemeProvider> 
   )
 }
 

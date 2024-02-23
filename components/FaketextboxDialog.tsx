@@ -1,30 +1,18 @@
 'use client'
 
 import Image from "next/image"
-import { ArrowLeft, X } from "lucide-react"
+import { X } from "lucide-react"
 import { useState , useEffect , useRef } from "react"
 import { UploadButton } from "@/utils/uploadthing"
-
-
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 
 export function FaketextboxDialog() {
 
   const [userThread, setUserThread] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const [postImage,setPostImage] = useState<string>();
-  // const [userThread, setUserThread] = useState<string>('');
-  // const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
+  // It is used to resize (go to new line) the textarea field when it exceeds the width of textarea or when we press enter. 
   useEffect(() => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = 'auto';

@@ -22,5 +22,5 @@ export default function UserFollowCard(props : {image: string | StaticImport , f
         
         <Button variant='outline' className='px-4 font-semibold rounded-xl border dark:border dark:border-[#373737]'>Follow</Button>
     </div>
-  )
+  ) 
 }
