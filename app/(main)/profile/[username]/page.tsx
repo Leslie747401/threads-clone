@@ -79,16 +79,7 @@ export default function UserProfilePage({params} : {params : {username : string}
 
       <div className="flex justify-between items-center mb-3 mx-5">
 
-        {/* Sending the image as prop to the dialog component */}
-        {
-          skeletonLoading ? 
-            
-            <Skeleton width={84} height={84} className="rounded-full"/> 
-          
-            : 
-            
-            <ProfileImageDialog/>
-        }
+        { skeletonLoading ?  <Skeleton width={84} height={84} circle/> : <ProfileImageDialog/> }
 
         <div className="w-[75%] flex justify-between">
           <div className="w-[30%] flex flex-col gap-1 items-center">

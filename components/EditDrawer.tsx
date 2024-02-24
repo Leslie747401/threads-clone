@@ -12,6 +12,7 @@ import axios from "axios"
 import { RootState } from "@/app/Redux/store"
 import { useDispatch, useSelector } from "react-redux"
 import { setBio, setFullname, setProfilePicture } from "@/app/Redux/States/ProfileState/ProfileSlice"
+import Skeleton from "react-loading-skeleton"
 
 export function EditDrawer() {
 
@@ -35,6 +36,7 @@ export function EditDrawer() {
   const [openDrawer,setOpenDrawer] = useState(false);
 
   const [loading,setLoading] = useState(false);
+  const [imageLoading,setImageLoading] = useState(false);
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -47,17 +49,17 @@ export function EditDrawer() {
     setNewFullname(fullname);
     setNewBio(bioWithLineBreaks);
     setNewImage(profile_picture);
-    setDropdown(false); // If i close the dialog when the dropdown is open then when i open the dialog again the dropdown is already open.
+    setDropdown(false); // // If i close the dialog when the dropdown is open then when i open the dialog again the dropdown is already open so to close when the dialog is close we set the dropdown state to false.
   }
 
   async function handleDone(){
 
     setLoading(true);
 
-    // setTimeout(()=>{                Fake Delay
+    // setTimeout(()=>{                // Fake Delay
     //     setLoading(false);
     //     setOpenDrawer(false);
-    // },10000);
+    // },3000);
 
     const response = await axios.post('/api/editProfile',{
       image : newImage,
@@ -88,15 +90,21 @@ export function EditDrawer() {
 
       <DrawerContent className="w-full max-sm:h-screen sm:max-w-[575px] z-50">
 
-        <div className="flex justify-between p-6 px-8">
-  
+        <div className="flex justify-between p-6 px-8 items-center relative">
+    
           <DrawerClose asChild onClick={handleCancel}>
-            <p className="cursor-pointer w-[52px] flex justify-center items-center">{loading ? <Loader/> : 'Cancel'}</p>
+            {/* When the image is uploading we disable the 'Done' Button by assigning "pointer-events-none" and when it completes the upload we remove "pointer-events-none". */}
+            <p className={`${imageLoading ? 'pointer-events-none' : 'cursor-pointer w-[52px]'}`}>
+              {loading ? <div className="absolute top-6 left-10 pointer-events-none"><Loader/></div> : 'Cancel'}
+              </p>
           </DrawerClose>
   
           <p className="font-medium">Edit Profile</p>
   
-          <button className='text-blue-500 w-[52px] flex justify-center items-center' onClick={handleDone} >{loading ? <Loader/> : 'Done'}</button>
+          {/* When the image is uploading we disable the 'Done' Button by assigning "pointer-events-none" and when it completes the upload we remove "pointer-events-none". */}
+          <button className={imageLoading ? 'text-blue-500 pointer-events-none' : 'text-blue-500 w-[52px]'} onClick={handleDone} >
+            {loading ? <div className="absolute top-6 right-10"><Loader/></div> : 'Done'}
+          </button>
 
         </div>
 
@@ -115,14 +123,23 @@ export function EditDrawer() {
                         </div>
                     </div>
 
-                    <Image
-                        src={newImage}
-                        width={55}
-                        height={55}
-                        alt="profile_picture"
-                        className="rounded-full"
-                        onClick={() => setDropdown(!dropdown)}
-                    />
+                    {/* When the image is being uploaded we display a circular skeleton and when it finishes uploading the image is displayed. */}
+                    {
+                      imageLoading ? 
+                      
+                        <Skeleton width={55} height={55} circle/> 
+                      
+                      :
+                      
+                        <Image
+                          src={newImage}
+                          width={55}
+                          height={55}
+                          alt="profile_picture"
+                          className="rounded-full"
+                          onClick={() => setDropdown(!dropdown)}
+                        />
+                    }
                 </div>
 
                 <div className="border-b w-[78%] border-[#d7d7d7] dark:border-[#464646]"></div>
@@ -146,16 +163,22 @@ export function EditDrawer() {
                     <UploadButton endpoint='imageUploader'
                     
                         onUploadProgress={()=>{
+                            // When we click "Upload picture" present in the dropdown , we should be able to upload the file and the dropdown should be closed.
                             setDropdown(false);
+                            // When the image is being uploaded we set the imageLoading state to true.
+                            setImageLoading(true);
                         }}
 
                         onClientUploadComplete={(res) => {
                         // Do something with the response
                             console.log("Files: ", res);
+                            // Once the image is successfully uploaded , we set the image Loading state to False.
+                            setImageLoading(false);
+                            // We update the new Image with the image that was uploaded
                             setNewImage(res[0].url);
                         }}
                         onUploadError={(error: Error) => {
-                            // Do something with the error.
+                            // Erorr while uploading
                             alert(`ERROR! ${error.message}`);
                         }}
 
@@ -176,7 +199,9 @@ export function EditDrawer() {
                     />
 
                     <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#242424] rounded-b-xl" onClick={() => {
+                        // When we click "Remove current picture" we remove the picture and replace with a common 'no user image'
                         setNewImage('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg');
+                        // And also close the dropdown after the "Remove current picture is clicked"
                         setDropdown(false);
                     }}>Remove current picture</button>
                 </div>

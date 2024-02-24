@@ -11,6 +11,7 @@ import axios from "axios"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/app/Redux/store"
 import { setBio, setFullname, setProfilePicture } from "@/app/Redux/States/ProfileState/ProfileSlice"
+import Skeleton from "react-loading-skeleton"
 
 export function EditDialog() {
 
@@ -31,9 +32,11 @@ export function EditDialog() {
   
   const [dropdown,setDropdown] = useState(false);
 
-  const [openDrawer,setOpenDrawer] = useState(false);
+  const [openDialog,setOpenDialog] = useState(false);
 
   const [loading,setLoading] = useState(false);
+
+  const [imageLoading,setImageLoading] = useState(false);
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -45,7 +48,7 @@ export function EditDialog() {
   async function handleDone(){
     setLoading(true);
 
-    // setTimeout(()=>{                Fake Delay
+    // setTimeout(()=>{                // Fake Delay
     //     setLoading(false);
     //     setOpenDrawer(false);
     // },2000);
@@ -58,8 +61,11 @@ export function EditDialog() {
     })
 
     if(response){
+      // after we get the data we set the loading to false and close the dialog
       setLoading(false);
-      setOpenDrawer(false);
+      setOpenDialog(false);
+
+      // update the data recieved from database
       dispatch(setFullname(newFullname));
       const bioWithLineBreaks = newBio.replace(/\n/g, '<br/>');
       dispatch(setBio(bioWithLineBreaks));
@@ -68,7 +74,7 @@ export function EditDialog() {
   }
 
   return (
-    <Dialog open={openDrawer} onOpenChange={setOpenDrawer}>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
 
       <DialogTrigger asChild>
 
@@ -77,16 +83,18 @@ export function EditDialog() {
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[500px] z-50 border border-[#d7d7d7] dark:border-[#464646]" onInteractOutside={(e)=>{
-          // If the 'Done' button is clicked then we restrict the closing of dialog by clicking outside the dialog.
-          if(loading){
+          
+          // If the 'Done' button is clicked then we restrict the closing of dialog by clicking outside the dialog when the data is being sent to the server or when the image is being uploaded.
+          if(loading || imageLoading){
             e.preventDefault();
           }
+          
           // Else if we click outside the dialog which basically means 'Cancel' then we restore the previous data
           else{
-            dispatch(setFullname(username));
-            dispatch(setBio(bio));
-            dispatch(setProfilePicture(profile_picture));
-            setDropdown(false); // If i close the dialog when the dropdown is open then when i open the dialog again the dropdown is already open.
+            setNewFullname(fullname);
+            setNewBio(bioWithLineBreaks); 
+            setNewImage(profile_picture);
+            setDropdown(false); // If i close the dialog when the dropdown is open then when i open the dialog again the dropdown is already open so to close when the dialog is close we set the dropdown state to false.
           }
       }}>
 
@@ -101,14 +109,23 @@ export function EditDialog() {
                     </div>
                 </div>
 
-                <Image
-                    src={newImage}
-                    width={55}
-                    height={55}
-                    alt="profile_picture"
-                    className="rounded-full"
-                    onClick={() => setDropdown(!dropdown)}
-                />
+                {/* When the image is being uploaded we display a circular skeleton and when it finishes uploading the image is displayed. */}
+                { 
+                  imageLoading ? 
+
+                    <Skeleton width={55} height={55} circle/>
+
+                  :
+
+                    <Image
+                      src={newImage}
+                      width={55}
+                      height={55}
+                      alt="profile_picture"
+                      className="rounded-full"
+                      onClick={() => setDropdown(!dropdown)}
+                    />
+                }
             </div>
 
             <div className="border-b w-[83%] border-[#d7d7d7] dark:border-[#464646]"></div>
@@ -119,14 +136,17 @@ export function EditDialog() {
                 <textarea rows={1} className="w-full outline-none resize-none dark:bg-[#171717]" maxLength={21} value={newFullname} onChange={(e) => setNewFullname(e.target.value)} required></textarea>
             </div>
 
-            <div className="pb-3 border-b border-[#d7d7d7] dark:border-[#464646]  space-y-1">
+            <div className="pb-3 border-b border-[#d7d7d7] dark:border-[#464646] space-y-1">
                 <p className="font-medium">Bio</p>                 
                 <textarea className="w-full resize-none overflow-hidden outline-none dark:bg-[#171717]" value={newBio} onChange={(e)=>{setNewBio(e.target.value)}} ref={textAreaRef} required></textarea>
             </div>
 
             <div className="pb-2"></div>
-
-            <button className="w-full bg-black text-white dark:bg-white dark:text-black py-3 rounded-xl mt-40 font-medium flex justify-center items-center h-[48px]"  onClick={handleDone}>{loading ? <Loader/> : 'Done'}</button>
+              
+            {/* When the image is uploading we disable the 'Done' Button by assigning "pointer-events-none" and when it completes the upload we remove "pointer-events-none". */}
+            <button className={`${imageLoading ? 'w-full bg-black text-white dark:bg-white dark:text-black py-3 rounded-xl mt-40 font-medium flex justify-center items-center h-[48px] pointer-events-none' : 'w-full bg-black text-white dark:bg-white dark:text-black py-3 rounded-xl mt-40 font-medium flex justify-center items-center h-[48px] relative'}`} onClick={handleDone}>
+              { loading ? <div className="absolute top-2.5"><Loader/></div> : 'Done' }
+            </button>
 
             {
                 dropdown &&
@@ -135,16 +155,21 @@ export function EditDialog() {
                     <UploadButton endpoint='imageUploader'
                     
                         onUploadProgress={()=>{
+                            // When we click "Upload picture" present in the dropdown , we should be able to upload the file and the dropdown should be closed.
                             setDropdown(false);
+                            // When the image is being uploaded we set the imageLoading state to true.
+                            setImageLoading(true);
                         }}
 
                         onClientUploadComplete={(res) => {
-                        // Do something with the response
                             console.log("Files: ", res);
+                            // Once the image is successfully uploaded , we set the image Loading state to False.
+                            setImageLoading(false);
+                            // We update the new Image with the image that was uploaded
                             setNewImage(res[0].url);
                         }}
                         onUploadError={(error: Error) => {
-                            // Do something with the error.
+                            // Erorr while uploading
                             alert(`ERROR! ${error.message}`);
                         }}
 
@@ -165,9 +190,14 @@ export function EditDialog() {
                     />
 
                     <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#242424] rounded-b-xl" onClick={() => {
+                        // When we click "Remove current picture" we remove the picture and replace with a common 'no user image'
                         setNewImage('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg');
+                        // And also close the dropdown after the "Remove current picture is clicked"
                         setDropdown(false);
-                    }}>Remove current picture</button>
+                    }}>
+                      Remove current picture
+                    </button>
+
                 </div>
             }
 

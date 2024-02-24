@@ -65,15 +65,7 @@ export default function Profile() {
 
       <div className="flex justify-between items-center mb-3 mx-5">
 
-        {
-          skeletonLoading ? 
-            
-            <Skeleton width={84} height={84} className="rounded-full"/> 
-          
-            : 
-            
-            <ProfileImageDialog/>
-        }
+        { skeletonLoading ? <Skeleton width={84} height={84} circle/> : <ProfileImageDialog/> }
 
         <div className="w-[75%] flex justify-between">
           <div className="w-[30%] flex flex-col gap-1 items-center">
