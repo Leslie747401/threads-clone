@@ -90,7 +90,7 @@ export function EditDrawer() {
 
       <DrawerContent className="w-full max-sm:h-screen sm:max-w-[575px] z-50">
 
-        <div className="flex justify-between p-6 px-8 items-center relative">
+        <div className="flex justify-between p-6 px-8 items-center relative border-b border-b-[#d7d7d7] dark:border-b-[#464646]">
     
           <DrawerClose asChild onClick={handleCancel}>
             {/* When the image is uploading we disable the 'Done' Button by assigning "pointer-events-none" and when it completes the upload we remove "pointer-events-none". */}
@@ -108,7 +108,7 @@ export function EditDrawer() {
 
         </div>
 
-        <div className="w-full h-[1px] bg-[#d7d7d7] dark:bg-[#464646]"/>
+        {/* <div className="w-full h-[1px] bg-[#d7d7d7] dark:bg-[#464646]"/> */}
 
         <div className="w-full h-full flex justify-center items-center mx-auto bg-[#FAFAFA] dark:bg-black">
 
@@ -158,7 +158,7 @@ export function EditDrawer() {
 
             {
                 dropdown &&
-                <div className="absolute top-[267px] right-12 flex flex-col shadow-xl rounded-xl border">
+                <div className="absolute top-[267px] right-12 flex flex-col shadow-xl rounded-xl border dark:border-[#2f2f2f]">
                     
                     <UploadButton endpoint='imageUploader'
                     
@@ -184,7 +184,7 @@ export function EditDrawer() {
 
                         appearance={{
                         allowedContent : 'hidden',
-                        button : 'w-full flex justify-start p-4 py-6 font-medium border-b bg-white dark:bg-[#242424] text-black  dark:text-white rounded-none rounded-t-xl'
+                        button : 'w-full flex justify-start p-4 py-6 font-medium border-b dark:border-b-[#2f2f2f] bg-white dark:bg-[#1d1d1d] text-black dark:text-white rounded-none rounded-t-xl'
                         }}
 
                         content={{      
@@ -198,7 +198,7 @@ export function EditDrawer() {
 
                     />
 
-                    <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#242424] rounded-b-xl" onClick={() => {
+                    <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#1d1d1d] rounded-b-xl" onClick={() => {
                         // When we click "Remove current picture" we remove the picture and replace with a common 'no user image'
                         setNewImage('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg');
                         // And also close the dropdown after the "Remove current picture is clicked"

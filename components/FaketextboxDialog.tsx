@@ -50,7 +50,7 @@ export function FaketextboxDialog() {
 
       </DialogTrigger>
 
-      <DialogContent className="w-full max-sm:h-screen sm:max-w-[575px] z-50" onInteractOutside={(e) => {setUserThread(''); setPostImage('')}}>
+      <DialogContent className="w-full max-sm:h-screen sm:max-w-[575px] z-50" onInteractOutside={(e) => {setUserThread(''); setPostImage('')}}> 
 
         <div className="flex justify-between p-6 px-8">
       
