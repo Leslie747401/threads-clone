@@ -1,4 +1,4 @@
-import { authMiddleware, clerkClient, redirectToSignIn } from "@clerk/nextjs";
+import { authMiddleware, clerkClient, redirectToSignIn, redirectToSignUp } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 // This example protects all routes including api/trpc routes
@@ -12,7 +12,7 @@ export default authMiddleware({
   async afterAuth(auth,req){
        
     if (!auth.userId && !auth.isPublicRoute) {
-      return redirectToSignIn({returnBackUrl : req.url});
+      return redirectToSignUp({returnBackUrl : req.url});
     }
       
     // if(auth.userId){
