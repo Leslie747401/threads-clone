@@ -15,7 +15,7 @@ export default function Activity() {
   };
 
   return (
-    <div className="sm:w-[40%] pt-[74px] sm:pt-12 pb-16">
+    <div className="sm:w-[65%] sm:mx-auto lg:w-[60%] xl:w-[40%] pt-[74px] sm:pt-12 pb-16">
       
       <div className='flex justify-between mx-5 mb-10'>
         

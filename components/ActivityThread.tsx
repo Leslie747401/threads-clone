@@ -9,7 +9,7 @@ export default function ActivityThread() {
 
   useEffect(() => {
     
-    // It updates broder height (which looks like a thread) based on the height of the image and text in the thread.
+    // It updates broder height (which looks line)
     const updateBorderHeight = () => {
         if (contentRef.current) {
           const contentHeight = contentRef.current.clientHeight;
@@ -38,7 +38,7 @@ export default function ActivityThread() {
 
   return (
     <>
-        <div className="sm:w-full flex items-start gap-3 mb-1 mx-5 mt-8">
+        <div className="sm:w-full flex items-start gap-3 mb-1 mx-5 mt-4">
 
             {/* Profile Image and the line */}
             <div className="flex flex-col gap-2">        

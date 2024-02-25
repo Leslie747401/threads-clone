@@ -10,7 +10,7 @@ export default function LeftsideBar() {
   const pathname = usePathname();
 
   return (
-    <div className='hidden sm:block sticky left-0 top-0 h-screen w-[17%] pt-12 pl-16 pr-20 border-r border-[gainsboro] dark:border-[#222429]'>
+    <div className='hidden sm:block sticky left-0 top-0 h-screen md:w-[27%] lg:w-[22%] xl:w-[17%] pt-12 pl-16 pr-20 max-md:pl-10 max-md:pr-11  border-r border-[gainsboro] dark:border-[#222429]'>
 
       <div className="flex gap-4 items-center mb-14">
         

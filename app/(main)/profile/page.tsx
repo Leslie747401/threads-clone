@@ -61,11 +61,11 @@ export default function Profile() {
   },[session_data.session])
 
   return (
-    <div className="sm:w-[40%] pt-[74px] sm:pt-12 pb-16">
+    <div className="sm:w-[65%] sm:mx-auto lg:w-[60%] xl:w-[40%] pt-[74px] sm:pt-12 pb-16">
 
       <div className="flex justify-between items-center mb-3 mx-5">
 
-        { skeletonLoading ? <Skeleton width={84} height={84} circle/> : <ProfileImageDialog/> }
+        {skeletonLoading ? <Skeleton width={84} height={84} circle/> : <ProfileImageDialog/>}
 
         <div className="w-[75%] flex justify-between">
           <div className="w-[30%] flex flex-col gap-1 items-center">
@@ -103,11 +103,11 @@ export default function Profile() {
       
       </div>
 
-      <div className="flex justify-between sm:mx-5">
+      <div className="flex justify-between sm:mx-auto">
         
-        <p className={`w-[50%] flex justify-center border-b-[1px] pb-2 cursor-pointer ${activeTab === 'Threads' ? 'border-black text-black dark:border-white dark:text-white' : 'text-gray-400'}`} onClick={() => setActiveTab('Threads')}>Threads</p>
+        <p className={`w-[50%] flex justify-center border-b-[1px] pb-2 cursor-pointer ${activeTab === 'Threads' ? 'border-b-black text-black dark:border-b-white dark:text-white' : 'text-gray-400'}`} onClick={() => setActiveTab('Threads')}>Threads</p>
 
-        <p className={`w-[50%] flex justify-center border-b-[1px] pb-2 cursor-pointer ${activeTab === 'Replies' ? 'border-black text-black dark:border-white dark:text-white' : 'text-gray-400'}`} onClick={() => setActiveTab('Replies')}>Replies</p>
+        <p className={`w-[50%] flex justify-center border-b-[1px] pb-2 cursor-pointer ${activeTab === 'Replies' ? 'border-b-black text-black dark:border-b-white dark:text-white' : 'text-gray-400'}`} onClick={() => setActiveTab('Replies')}>Replies</p>
 
       </div>
 

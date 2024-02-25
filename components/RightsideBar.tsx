@@ -13,7 +13,7 @@ export default async function RightsideBar() {
   return (
     // Sticky acts as fixed once it is scrolled enough to touch the top/bottom/left/right of the screen. Since i have already assigned it as top-0 it will act as fixed. You might be thinking why did i not use fixed in the first place, well, i did but it was giving some overflow issues
 
-    <div className='sticky right-0 top-0 h-screen max-w-fit pl-12 pt-12 pr-12 border-l border-[gainsboro] dark:border-[#222429] hidden md:block'>
+    <div className='sticky right-0 top-0 h-screen max-w-fit pl-12 pt-12 pr-12 border-l border-[gainsboro] dark:border-[#222429] hidden xl:block'>
         
         <div className='flex gap-4 items-center mb-14'>
            <UserButton afterSignOutUrl='/sign-in'/>

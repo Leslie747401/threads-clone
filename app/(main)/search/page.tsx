@@ -52,10 +52,10 @@ export default function Search() {
     }
 
   },[searchText])
-
+ 
 
   return (
-    <div className="sm:w-[35%] pt-[74px] mx-5 sm:pt-12 pb-12">
+    <div className="sm:w-[60%] sm:mx-auto lg:w-[60%] xl:w-[35%] pt-[74px] mx-5 sm:pt-12 pb-12">
       
       <div className='flex gap-4 items-center px-4 py-3 w-full bg-gray-50 dark:bg-[#0c0c0e] border border-gray-300 dark:border dark:border-[#373737] rounded-2xl mb-10'>
 

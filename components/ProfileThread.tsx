@@ -37,7 +37,7 @@ export default function ProfileThread() {
 
   return (
     <>
-        <div className="w-full sm:w-[93.5%] sm:mx-5 h-[1px] bg-gray-300 dark:bg-gray-600"/>
+        <div className="w-full sm:w-[100%] sm:mx-auto h-[1px] bg-gray-300 dark:bg-gray-600"/>
 
         <div className="sm:w-full flex items-start gap-3 mb-1 mx-5 mt-4">
 
