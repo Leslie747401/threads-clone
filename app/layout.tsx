@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ClerkProvider} from '@clerk/nextjs'
 import './globals.css'
-import { Toaster } from "@/components/ui/toaster"
 import Providers from './Redux/Providers'
 
 const font = Inter({ subsets: ['latin'] })
@@ -33,9 +32,8 @@ export default function RootLayout({
           }}
         >
         <html lang="en">
-          <body className={`${font.className} box-border`}>
+          <body className={`${font.className}`}>
             {children}
-            <Toaster/>
           </body>
         </html>
       </ClerkProvider>

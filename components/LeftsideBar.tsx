@@ -50,6 +50,7 @@ export default function LeftsideBar() {
       </div>
 
       <ul>
+        
         <li>
           <Link href='/' className="flex items-center gap-6 mb-8 pl-1">
             
@@ -158,7 +159,7 @@ export default function LeftsideBar() {
 
       </ul>
 
-      <button className="absolute bottom-12 rounded-lg w-full h-fit flex items-center gap-6" onClick={() => {
+      <button className="xl:hidden absolute bottom-12 rounded-lg w-full h-fit flex items-center gap-6" onClick={() => {
           if(appearance){
             setDropdown(false);
             setAppearance(false);

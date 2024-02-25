@@ -7,6 +7,9 @@ import MobileNavbar from '@/components/MobileNavbar'
 import MobileFooter from '@/components/MobileFooter'
 import 'react-loading-skeleton/dist/skeleton.css'
 import ThemeSkeleton from '@/components/ThemeSkeleton'
+import Providers from '../Redux/Providers'
+import { ClerkProvider } from '@clerk/nextjs'
+import { Toaster } from '@/components/ui/toaster'
 
 const font = Inter({ subsets: ['latin'] })
 
@@ -32,6 +35,7 @@ export default function MainLayout({
               <div className='sm:flex sm:justify-between'>
                   <MobileNavbar/>
                   <LeftsideBar/>
+                    <Toaster/>
                     {children}
                   <RightsideBar/>
                   <MobileFooter/>

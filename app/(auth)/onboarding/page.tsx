@@ -115,7 +115,7 @@ const Onboarding: FC<OnboardingProps> = () => {
 
           <div className='text-white bg-blue-600 rounded-3xl p-3 px-7 text-sm flex gap-3 items-center'>
             <Image
-                src='/assets/images/toast-checkmark.png'
+                src='/assets/images/white-toast-checkmark.png'
                 width={24}
                 height={24}
                 alt="tick icon"
