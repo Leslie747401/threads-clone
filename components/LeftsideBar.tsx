@@ -158,7 +158,7 @@ export default function LeftsideBar() {
 
       </ul>
 
-      <button className="xl:hidden absolute bottom-12 rounded-lg w-full h-fit flex items-center gap-6" onClick={() => {
+      <button className="absolute bottom-12 rounded-lg w-full h-fit flex items-center gap-6" onClick={() => {
           if(appearance){
             setDropdown(false);
             setAppearance(false);
@@ -169,7 +169,16 @@ export default function LeftsideBar() {
           }
         }}>
 
-        <div className="pl-[2px]"><MenuIcon width={26} height={26} className={`${dropdown || appearance ? 'text-black dark:text-white' : 'text-[#a9a9a9]'}`}/></div>
+        {/* <div className="pl-[2px]"><MenuIcon width={26} height={26} className={`${dropdown || appearance ? 'text-black dark:text-white' : 'text-[#a9a9a9]'}`}/></div> */}
+
+        <div className="pl-1">
+          <div className="flex flex-col gap-1.5">
+            <div className={`w-[21px] h-[3px] rounded-full ${dropdown || appearance ? 'bg-black dark:bg-white' : 'bg-[#a9a9a9]'}`}></div>
+            <div className="w-full flex justify-end">
+                <div className={`w-[14px] h-[3px] rounded-full ${dropdown || appearance ? 'bg-black dark:bg-white' : 'bg-[#a9a9a9]'}`}></div>
+            </div>
+          </div>
+        </div>
         
         <p className={`${dropdown || appearance ? 'text-lg text-black dark:text-white font-medium' : 'text-lg text-[#a9a9a9] hover:text-black hover:dark:!text-white transition-all'}`}>More</p>
       
