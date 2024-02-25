@@ -178,7 +178,7 @@ export default function LeftsideBar() {
       {
         dropdown && 
         
-        <div className="absolute w-[70%] left-8 md:left-10 bottom-24 bg-white dark:!bg-[#1d1d1d] text-black dark:text-white rounded-xl border dark:border-[#212121] font-medium cursor-pointer"> {/* shadow-xl dark:shadow-none */}
+        <div className="absolute w-[70%] left-8 md:left-10 bottom-24 bg-white dark:!bg-[#1d1d1d] text-black dark:text-white rounded-xl border dark:border-[#212121] font-medium cursor-pointer drop-shadow-xl dark:drop-shadow-none">
           <p className="border-b dark:border-b-[#2f2f2f] py-3 pl-6 pr-16" onClick={() => {
             setAppearance(true);
             setDropdown(false);
