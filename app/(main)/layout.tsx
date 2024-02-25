@@ -27,7 +27,7 @@ export default function MainLayout({
   return (
       <ThemeProvider                     // The ThemeProvider should wrap all the components in it.
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
       >                                
         <html lang="en">
           <body className={font.className}>

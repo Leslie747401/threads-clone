@@ -9,10 +9,10 @@ export default authMiddleware({
   publicRoutes : ['api/webhook/clerk','/api/uploadthing','/api/userdata'],
   ignoredRoutes : ['/api/webhook/clerk'],
 
-  async afterAuth(auth,req){
-       
+  async afterAuth(auth,req){   
+    
     if (!auth.userId && !auth.isPublicRoute) {
-      return redirectToSignUp({returnBackUrl : req.url});
+      return redirectToSignIn({returnBackUrl : req.url});
     }
       
     // if(auth.userId){
