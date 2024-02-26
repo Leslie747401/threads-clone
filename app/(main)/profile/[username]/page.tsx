@@ -118,7 +118,6 @@ export default function UserProfilePage({params} : {params : {username : string}
            </div>: buttontext }
         </button>
 
-
         { isMobile ? <ShareDrawer/> : <ShareDialog/> }
       
       </div>
