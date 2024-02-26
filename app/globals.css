@@ -182,9 +182,9 @@ body{
 .spinner {
   font-size: 28px;
   position: relative;
-  display: inline-block;
+  /* display: inline-block; */
   width: 1em;
-  top: 50%;
+  /* top: 50%; */
   height: 1em;
 }
  

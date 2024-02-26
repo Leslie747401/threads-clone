@@ -113,7 +113,7 @@ export default function UserProfilePage({params} : {params : {username : string}
 
         <button className={`${buttontext === 'Follow' ? 'w-[48%] bg-black hover:bg-black dark:bg-white dark:hover:bg-white  text-white dark:text-black rounded-xl' : 'w-[48%] bg-white text-black hover:bg-white dark:bg-[#121212] dark:hover:bg-[#121212] dark:text-white rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]'} `} onClick={handlefollow} disabled={loading}>
           { loading ?
-           <div  className="relative top-[3px]">
+           <div  className="relative top-0 left-[45%]">
              <Loader/>
            </div>: buttontext }
         </button>
