@@ -12,7 +12,6 @@ import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import axios from 'axios'
 import { useSession } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 interface OnboardingProps {}
 
@@ -202,7 +201,6 @@ const Onboarding: FC<OnboardingProps> = () => {
         required
       ></textarea>
 
-      {/* <Link href='/'> */}
       <Button type='submit' className={fullname && newusername && bio && image && validUsername === 'Valid' ? 'w-full sm:w-[400px] bg-white text-black font-medium hover:bg-[#dadada] p-6 transition-all' : 'w-full sm:w-[400px] bg-[#bdbdbd] text-black font-medium hover:bg-[#c9c9c9] p-6 pointer-events-none'}
           onClick={() => {
             fullname && newusername && bio && image  // The toast will only be shown if fullname, username , bio and image field exists 
@@ -211,12 +209,14 @@ const Onboarding: FC<OnboardingProps> = () => {
               duration : 2000,
               className : 'bg-black text-white'
             });
+
+            // After filling up the Onboarding page, the user is redirected to the home page.
             router.push('/');
+            // This statement is included as the it was giving an error as fast refresh reload required.
             router.refresh();
           }}>
             Continue
           </Button>
-      {/* </Link> */}
 
     </form>
 

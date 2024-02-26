@@ -1,4 +1,4 @@
-import { authMiddleware, clerkClient, redirectToSignIn, redirectToSignUp } from "@clerk/nextjs";
+import { authMiddleware } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 // This example protects all routes including api/trpc routes
@@ -13,14 +13,16 @@ export default authMiddleware({
 
   async afterAuth(auth,req){  
 
+    // When accessing a public route the user can simply access it without any authenttication.
     if (auth.isPublicRoute) {
-      //  For public routes, we don't need to do anything
       return NextResponse.next();
     }
 
     const url = new URL(req.nextUrl.origin);
     
+    // if auth.userId is true then it means that the user exists in clerk database. So, !auth.userId means that the user is not present in the clerk database and !auth.isPublicRoute means that the user is trying to access a protected route. So, we simply redirect the user to the sign-in page. 
     if (!auth.userId && !auth.isPublicRoute) {
+
       url.pathname = "/sign-in";
       return NextResponse.redirect(url);
     }
