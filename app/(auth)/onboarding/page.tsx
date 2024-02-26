@@ -12,6 +12,7 @@ import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import axios from 'axios'
 import { useSession } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface OnboardingProps {}
 
@@ -25,7 +26,7 @@ const Onboarding: FC<OnboardingProps> = () => {
   const [usernamefromdb,setUsernamefromdb] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const router = useRouter();
-  const session_data = useSession();  
+  const session_data = useSession();
     
   useEffect(() => {
 
@@ -201,18 +202,21 @@ const Onboarding: FC<OnboardingProps> = () => {
         required
       ></textarea>
 
-        <Button type='submit' className={fullname && newusername && bio && image && validUsername === 'Valid' ? 'w-full sm:w-[400px] bg-white text-black font-medium hover:bg-[#dadada] p-6 transition-all' : 'w-full sm:w-[400px] bg-[#bdbdbd] text-black font-medium hover:bg-[#c9c9c9] p-6 pointer-events-none'}
+      {/* <Link href='/'> */}
+      <Button type='submit' className={fullname && newusername && bio && image && validUsername === 'Valid' ? 'w-full sm:w-[400px] bg-white text-black font-medium hover:bg-[#dadada] p-6 transition-all' : 'w-full sm:w-[400px] bg-[#bdbdbd] text-black font-medium hover:bg-[#c9c9c9] p-6 pointer-events-none'}
           onClick={() => {
-            fullname && newusername && bio && image   // The toast will only be shown if fullname, username , bio and image field exists 
+            fullname && newusername && bio && image  // The toast will only be shown if fullname, username , bio and image field exists 
             toast({
               description: "Welcome Aboard",
               duration : 2000,
               className : 'bg-black text-white'
             });
             router.push('/');
+            router.refresh();
           }}>
             Continue
           </Button>
+      {/* </Link> */}
 
     </form>
 

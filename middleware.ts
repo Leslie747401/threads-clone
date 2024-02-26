@@ -5,35 +5,26 @@ import { NextResponse } from "next/server";
 // Please edit this to allow other routes to be public as needed.
 // See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
 
+export const runtime = 'nodejs';
+
 export default authMiddleware({
   publicRoutes : ['api/webhook/clerk','/api/uploadthing','/api/userdata'],
   ignoredRoutes : ['/api/webhook/clerk'],
 
-  async afterAuth(auth,req){   
+  async afterAuth(auth,req){  
+
+    if (auth.isPublicRoute) {
+      //  For public routes, we don't need to do anything
+      return NextResponse.next();
+    }
+
+    const url = new URL(req.nextUrl.origin);
     
     if (!auth.userId && !auth.isPublicRoute) {
-      return redirectToSignIn({returnBackUrl : req.url});
+      url.pathname = "/sign-in";
+      return NextResponse.redirect(url);
     }
-      
-    // if(auth.userId){
-
-    //     const users = await clerkClient.users.getUserList();
-    //     let flag = 0;
-                
-    //   for(let i = 0 ; i < users.length ; i++){
-    //     if(users[i].id === auth.userId){
-    //       flag = 1;
-    //     }
-    //   }
-
-    //   if(flag){
-    //     return NextResponse.redirect(new URL('/',req.url));
-    //   }
-
-    //   else{
-    //     return NextResponse.redirect(new URL('/onboarding',req.url));
-    //   }
-    // }
+    
   }
 });
  
