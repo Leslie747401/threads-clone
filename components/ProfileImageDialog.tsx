@@ -27,6 +27,7 @@ export function ProfileImageDialog() {
 
       </DialogTrigger>
 
+      {/* Instead of h-screen, h-[calc(100dvh)] is used to cover the entire height of website screen in mobile. if we write h-screen then it exceeds the browser navigation bar to cover the whole screen */}
       <DialogContent className="w-full h-[calc(100dvh)] sm:max-w-screen-2xl z-50 flex justify-center items-center">
 
         <DialogClose>
