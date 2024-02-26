@@ -88,7 +88,7 @@ export function EditDrawer() {
             
       </DrawerTrigger>
 
-      <DrawerContent className="w-full max-sm:h-screen sm:max-w-[575px] z-50">
+      <DrawerContent className="w-full max-sm:h-[calc(100dvh)] sm:max-w-[575px] z-50">
 
         <div className="flex justify-between p-6 px-8 items-center relative border-b border-b-[#d7d7d7] dark:border-b-[#464646]">
     

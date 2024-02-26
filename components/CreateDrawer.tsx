@@ -174,7 +174,7 @@ export function CreateDrawer() {
             
       </DrawerTrigger>
 
-      <DrawerContent className="w-full max-sm:h-screen sm:max-w-[575px] z-50" onInteractOutside={(e) => {setUserThread(''); setPostImage('')}}>
+      <DrawerContent className="w-full max-sm:h-[calc(100dvh)] sm:max-w-[575px] z-50" onInteractOutside={(e) => {setUserThread(''); setPostImage('')}}>
 
         <div className="flex justify-between p-6 px-8">
   
