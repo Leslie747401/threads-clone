@@ -27,7 +27,7 @@ export function ProfileImageDialog() {
 
       </DialogTrigger>
 
-      <DialogContent className="w-full h-screen sm:max-w-screen-2xl z-50 flex justify-center items-center">
+      <DialogContent className="w-full h-[calc(100dvh)] sm:max-w-screen-2xl z-50 flex justify-center items-center">
 
         <DialogClose>
             <div className="p-3 dark:bg-black bg-[#e2e2e2] rounded-full absolute top-5 right-5 sm:top-8 sm:right-8">
