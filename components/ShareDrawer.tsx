@@ -42,7 +42,7 @@ export function ShareDrawer() {
             <p className="font-medium text-xl">Share Profile</p>
         </div>
 
-        <div className="pb-8 px-12 flex justify-between">
+        <div className="pb-8 px-10 flex justify-between">
 
             <WhatsappShareButton
                 url={current_url!}
@@ -80,8 +80,8 @@ export function ShareDrawer() {
         </div>
 
         <div className="mb-10 mx-10 h-[60px] rounded-xl border-[0.5px] border-[#cecece] dark:border-[#333333] flex justify-between items-center p-3">
-            <p className="text-sm w-[360px] h-[20px] overflow-hidden whitespace-nowrap text-ellipsis url">{current_url!}</p>
-            <button className="text-white bg-blue-600 rounded-3xl font-medium w-[104px] h-[36px] flex justify-center items-center" onClick={handleCopyBtnClick}>
+            <p className="text-sm w-[70%] h-[20px] overflow-hidden whitespace-nowrap text-ellipsis url">{current_url!}</p>
+            <button className="text-white bg-blue-600 rounded-3xl font-medium w-[24%] h-[36px] flex justify-center items-center" onClick={handleCopyBtnClick}>
               { copiedIcon ? <Check/> : 'Copy' }
             </button>
         </div>
