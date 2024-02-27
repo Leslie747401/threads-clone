@@ -9,13 +9,14 @@ export default function SearchUserFollowCard(props : {image: string | StaticImpo
     <Link href={`/profile/${props.username}`}>
       <div className='flex justify-between items-center mx-2 mb-8'>
         <div className='flex gap-4 sm:gap-5'>
-            <Image
-                src={props.image}
-                width={45} 
-                height={45}  
-                alt='prfile-icon'
-                className='rounded-full'
-            />
+            <div className='w-[45px] h-[45px] relative'>
+              <Image
+                  src={props.image}
+                  fill  
+                  alt='prfile-icon'
+                  className='rounded-full object-cover'
+              />
+            </div>
             <div className='flex-col font-medium'>
                 <p className='font-medium text-[15px]'>{props.username}</p>
                 <p className='text-gray-400 text-sm dark:text-gray-500'>{props.fullname}</p>

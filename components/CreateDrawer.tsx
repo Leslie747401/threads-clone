@@ -190,16 +190,18 @@ export function CreateDrawer() {
 
         <div className="w-full h-[1px] bg-[#d7d7d7] dark:bg-[#464646]"/>
 
-        <div className="flex pt-6 pb-10 px-10 pl-6 items-start gap-3 w-full">
+        <div className="flex pt-6 pb-10 pr-6 pl-6 items-start justify-between w-full">
 
-          <Image
-            src='/assets/images/user.png'
-            width={45}
-            height={45}
-            alt="profile-icon" 
-          />
+          <div className="w-[45px] h-[45px] relative">
+            <Image
+              src='/assets/images/user.png'
+              fill
+              alt="profile-icon"
+              className="rounded-full object-cover"
+            />
+          </div>
 
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-[85%]">
 
           <p className="font-medium">Leslie Dsilva</p>
     
@@ -263,7 +265,7 @@ export function CreateDrawer() {
     
           }
 
-      </div> 
+        </div> 
 
     </div>
 

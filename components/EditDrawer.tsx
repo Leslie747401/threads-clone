@@ -131,14 +131,15 @@ export function EditDrawer() {
                       
                       :
                       
-                        <Image
-                          src={newImage}
-                          width={55}
-                          height={55}
-                          alt="profile_picture"
-                          className="rounded-full"
-                          onClick={() => setDropdown(!dropdown)}
-                        />
+                        <div className="w-[55px] h-[55px] relative">
+                          <Image
+                            src={newImage}
+                            fill
+                            alt="profile_picture"
+                            className="rounded-full object-cover"
+                            onClick={() => setDropdown(!dropdown)}
+                          />
+                        </div>
                     }
                 </div>
 
