@@ -110,17 +110,67 @@ export function EditDrawer() {
 
         {/* <div className="w-full h-[1px] bg-[#d7d7d7] dark:bg-[#464646]"/> */}
 
-        <div className="w-full h-full flex justify-center items-center mx-auto bg-[#FAFAFA] dark:bg-black relative">
+        <div className="w-full h-full flex justify-center items-center mx-auto bg-[#FAFAFA] dark:bg-black">
 
             <div className="w-[90%] border border-[#d7d7d7] dark:border-[#464646] bg-white dark:bg-[#121212] rounded-xl p-6 flex flex-col gap-3">
 
-                <div className="flex justify-between">
+                <div className="flex justify-between relative">
                     <div className="space-y-1">
                         <p className="font-medium">Username</p>
                         <div className="flex items-center gap-2">
                             <Lock height={18} width={18}/>                    
                             <p>{username}</p>
                         </div>
+                        {
+                          dropdown &&
+                          <div className="absolute top-[60px] right-1 flex flex-col shadow-xl rounded-xl border dark:border-[#2f2f2f]">
+                              
+                              <UploadButton endpoint='imageUploader'
+                              
+                                  onUploadProgress={()=>{
+                                      // When we click "Upload picture" present in the dropdown , we should be able to upload the file and the dropdown should be closed.
+                                      setDropdown(false);
+                                      // When the image is being uploaded we set the imageLoading state to true.
+                                      setImageLoading(true);
+                                  }}
+
+                                  onClientUploadComplete={(res) => {
+                                  // Do something with the response
+                                      console.log("Files: ", res);
+                                      // Once the image is successfully uploaded , we set the image Loading state to False.
+                                      setImageLoading(false);
+                                      // We update the new Image with the image that was uploaded
+                                      setNewImage(res[0].url);
+                                  }}
+                                  onUploadError={(error: Error) => {
+                                      // Erorr while uploading
+                                      alert(`ERROR! ${error.message}`);
+                                  }}
+
+                                  appearance={{
+                                  allowedContent : 'hidden',
+                                  button : 'w-full flex justify-start p-4 py-6 font-medium border-b dark:border-b-[#2f2f2f] bg-white dark:bg-[#1d1d1d] text-black dark:text-white rounded-none rounded-t-xl'
+                                  }}
+
+                                  content={{      
+                                      button({ready}){
+                                        if(ready)
+                                        return <>
+                                        Upload picture              
+                                        </>
+                                      },
+                                    }}
+
+                              />
+
+                              <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#1d1d1d] rounded-b-xl" onClick={() => {
+                                  // When we click "Remove current picture" we remove the picture and replace with a common 'no user image'
+                                  setNewImage('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg');
+                                  // And also close the dropdown after the "Remove current picture is clicked"
+                                  setDropdown(false);
+                              }}>Remove current picture</button>
+                          </div>
+                      }
                     </div>
 
                     {/* When the image is being uploaded we display a circular skeleton and when it finishes uploading the image is displayed. */}
@@ -157,7 +207,7 @@ export function EditDrawer() {
 
             </div>  
 
-            {
+            {/* {
                 dropdown &&
                 <div className="absolute top-[195px] right-12 flex flex-col shadow-xl rounded-xl border dark:border-[#2f2f2f]">
                     
@@ -206,7 +256,7 @@ export function EditDrawer() {
                         setDropdown(false);
                     }}>Remove current picture</button>
                 </div>
-            }      
+            }       */}
 
         </div>
 
