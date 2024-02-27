@@ -103,6 +103,8 @@ export default function LeftsideBar() {
           </Link>
         </li>
 
+        <CreateDialog/>
+
         <li>
           <Link href='/activity' className="flex items-center gap-6 mb-8 pl-1">
             
@@ -128,8 +130,6 @@ export default function LeftsideBar() {
 
           </Link>
         </li>
-
-        <CreateDialog/>
 
         <li>
           <Link href='/profile' className="flex items-center gap-6 pl-1">            

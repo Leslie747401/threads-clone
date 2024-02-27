@@ -69,6 +69,8 @@ export default function MobileFooter() {
               </Link>
             </li>
 
+            <CreateDrawer/>
+
             <li>
               <Link href='/activity'>
                 
@@ -92,8 +94,6 @@ export default function MobileFooter() {
 
               </Link>
             </li>
-
-            <CreateDrawer/>
 
             <li>
               <Link href='/profile'>            
