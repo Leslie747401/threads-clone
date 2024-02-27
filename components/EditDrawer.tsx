@@ -110,7 +110,7 @@ export function EditDrawer() {
 
         {/* <div className="w-full h-[1px] bg-[#d7d7d7] dark:bg-[#464646]"/> */}
 
-        <div className="w-full h-full flex justify-center items-center mx-auto bg-[#FAFAFA] dark:bg-black">
+        <div className="w-full h-full flex justify-center items-center mx-auto bg-[#FAFAFA] dark:bg-black relative">
 
             <div className="w-[90%] border border-[#d7d7d7] dark:border-[#464646] bg-white dark:bg-[#121212] rounded-xl p-6 flex flex-col gap-3">
 
@@ -159,7 +159,7 @@ export function EditDrawer() {
 
             {
                 dropdown &&
-                <div className="absolute top-[267px] right-12 flex flex-col shadow-xl rounded-xl border dark:border-[#2f2f2f]">
+                <div className="absolute top-[195px] right-12 flex flex-col shadow-xl rounded-xl border dark:border-[#2f2f2f]">
                     
                     <UploadButton endpoint='imageUploader'
                     
