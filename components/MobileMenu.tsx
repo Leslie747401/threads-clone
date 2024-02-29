@@ -16,7 +16,16 @@ export default function MobileMenu() {
     <div>
         
         {/* Icon */}
-        <div className="flex flex-col gap-1.5" onClick={() => setDropdown(!dropdown)}>
+        <div className="flex flex-col gap-1.5"  onClick={() => {
+          if(appearance){
+            setDropdown(false);
+            setAppearance(false);
+          }
+
+          else{
+            setDropdown(!dropdown);
+          }
+        }}>
             <div className={`w-[22px] h-[2px] rounded-full ${dropdown || appearance ? 'bg-black dark:bg-white' : '!bg-[#a9a9a9] dark:!bg-[#494949]'}`}></div>
                 <div className="w-full flex justify-end">
                     <div className={`w-[14px] h-[2px] rounded-full ${dropdown || appearance ? 'bg-black dark:bg-white' : '!bg-[#a9a9a9] dark:!bg-[#494949]'}`}></div>
