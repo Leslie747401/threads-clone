@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useMediaQuery } from "react-responsive";
+import MobileMenu from "./MobileMenu";
 
 
 export default function MobileNavbar() {
@@ -38,9 +39,15 @@ export default function MobileNavbar() {
             />
       
           </Link>
+
+          {/* Dropdown Menu */}
+          <div className="absolute right-6 top-6">
+            <MobileMenu/>
+          </div>
       
         </div>
       }
+      
     </>
   )
 }

@@ -8,6 +8,7 @@ import { MenuIcon , ArrowLeft, Moon, Sun} from "lucide-react"
 import { useState } from "react"
 import { useTheme } from "next-themes"
 import { SignOutButton, useClerk } from "@clerk/nextjs"
+import { useRouter } from "next/navigation"
 
 
 export default function LeftsideBar() {
@@ -17,6 +18,7 @@ export default function LeftsideBar() {
   const [appearance,setAppearance] = useState(false);
   const {theme ,setTheme} = useTheme();
   const { signOut } = useClerk();
+  const router = useRouter();
 
   return (
     <div className='hidden sm:block sticky left-0 top-0 h-screen md:w-[27%] lg:w-[22%] xl:w-[17%] pt-12 pl-16 pr-20 max-md:pl-10 max-md:pr-11  border-r border-[gainsboro] dark:border-[#222429]'>
@@ -193,7 +195,7 @@ export default function LeftsideBar() {
             setAppearance(true);
             setDropdown(false);
             }}>Appearance</p>
-          <SignOutButton signOutCallback={() => signOut()}><p className="py-3 pl-6 pr-16">Logout</p></SignOutButton>
+          <SignOutButton signOutCallback={() => {signOut(); router.push('/sign-in');}}><p className="py-3 pl-6 pr-16">Logout</p></SignOutButton>
         </div>
       }
 
