@@ -331,7 +331,7 @@ export function EditDialog() {
 
                   <div className="w-[55px] h-[55px] relative">
                     <Image
-                      src={useSelector((state : RootState) => state.profileData.profile_picture)}
+                      src={profile_picture}
                       fill
                       alt="profile_picture"
                       className="rounded-full object-cover"
@@ -346,7 +346,7 @@ export function EditDialog() {
             <div className="pb-3 border-b border-[#d7d7d7] dark:border-[#464646] space-y-1">
                 <p className="font-medium">Fullname</p>
                 {/* Here, i have used textarea with rows={1} instead of a simple <input type='text' /> because when i open the dialog the text appears to be selected. */}
-                <textarea rows={1} className="w-full outline-none resize-none dark:bg-[#171717]" maxLength={21} value={useSelector((state : RootState) => state.profileData.fullname)} onChange={(e) => setNewFullname(e.target.value)} required></textarea>
+                <textarea rows={1} className="w-full outline-none resize-none dark:bg-[#171717]" maxLength={21} value={fullname} onChange={(e) => setNewFullname(e.target.value)} required></textarea>
             </div>
 
             <div className="pb-3 border-b border-[#d7d7d7] dark:border-[#464646] space-y-1">
