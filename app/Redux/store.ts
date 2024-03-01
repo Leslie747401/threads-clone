@@ -7,7 +7,7 @@ import editProfileReducer from './States/EditProfileState/EditProfileSlice'
 export const store = configureStore({
   reducer: {
     profileData : profileReducer,
-    editProfileData : editProfileReducer
+    editProfileData : editProfileReducer,
   },
 })
 
