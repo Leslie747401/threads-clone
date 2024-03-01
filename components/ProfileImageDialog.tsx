@@ -9,7 +9,7 @@ import { useSelector } from "react-redux"
 
 export function ProfileImageDialog() {
 
-  const profile_picture = useSelector((state : RootState) => state.profileData.profile_picture);
+  const profile_picture = useSelector((state : RootState) => state.profileData.profilePicture);
 
   return (
     <Dialog>

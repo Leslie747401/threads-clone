@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/Redux/store";
 import { setBio, setFullname, setProfilePicture, setUsername } from "@/app/Redux/States/ProfileState/ProfileSlice";
 import Skeleton from "react-loading-skeleton";
+import { setNewBio, setNewFullname, setNewProfilePicture } from "@/app/Redux/States/EditProfileState/EditProfileSlice";
 
 export default function Profile() {
 
@@ -42,10 +43,16 @@ export default function Profile() {
 
         setSkeletonLoading(false);
 
+        // We set both new and current profile data with the same data as before we make any changes to the current profile data the new data will be same as the current data. 
+
         dispatch(setUsername(response.data.user[0].username));
         dispatch(setFullname(response.data.user[0].fullname));
         dispatch(setProfilePicture(response.data.user[0].profile_picture));
         dispatch(setBio(response.data.user[0].bio));
+
+        dispatch(setNewFullname(response.data.user[0].fullname));
+        dispatch(setNewProfilePicture(response.data.user[0].profile_picture));
+        dispatch(setNewBio(response.data.user[0].bio));
   
         setNumberOfThreads(response.data.thread[0].count); 
         setNumberOfFollowers(response.data.followers[0].count); 
@@ -58,7 +65,7 @@ export default function Profile() {
       getUserInfo();
     }
     
-  },[session_data.session])
+  },[session_data.session]);
 
   return (
     <div className="sm:w-[65%] sm:mx-auto lg:w-[60%] xl:w-[40%] pt-[74px] sm:pt-12 pb-16">

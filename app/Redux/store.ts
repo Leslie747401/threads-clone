@@ -2,10 +2,12 @@
 
 import { configureStore } from '@reduxjs/toolkit'
 import profileReducer from './States/ProfileState/ProfileSlice'
+import editProfileReducer from './States/EditProfileState/EditProfileSlice'
 
 export const store = configureStore({
   reducer: {
     profileData : profileReducer,
+    editProfileData : editProfileReducer
   },
 })
 

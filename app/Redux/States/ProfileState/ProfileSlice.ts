@@ -7,14 +7,14 @@ export interface ProfileState {
   username : string,
   fullname : string,
   bio : string,
-  profile_picture : string
+  profilePicture : string
 }
 
 const initialState: ProfileState = {
   username : '',
   fullname : '',
   bio : '',
-  profile_picture : ''
+  profilePicture : ''
 }
 
 export const profileSlice = createSlice({
@@ -28,7 +28,7 @@ export const profileSlice = createSlice({
       state.fullname = action.payload
     },
     setProfilePicture: (state, action: PayloadAction<string>) => {
-      state.profile_picture = action.payload
+      state.profilePicture = action.payload
     },
     setBio: (state, action: PayloadAction<string>) => {
       state.bio = action.payload

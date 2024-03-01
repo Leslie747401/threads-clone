@@ -4,7 +4,6 @@ import Image from "next/image"
 import { useState , useEffect , useRef } from "react"
 import { Button } from "./ui/button"
 import { Lock } from "lucide-react"
-
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
 import { UploadButton} from "@/utils/uploadthing";
 import Loader from "./Loader"
@@ -13,23 +12,24 @@ import { RootState } from "@/app/Redux/store"
 import { useDispatch, useSelector } from "react-redux"
 import { setBio, setFullname, setProfilePicture } from "@/app/Redux/States/ProfileState/ProfileSlice"
 import Skeleton from "react-loading-skeleton"
+import { setNewBio, setNewFullname, setNewProfilePicture } from "@/app/Redux/States/EditProfileState/EditProfileSlice"
 
 export function EditDrawer() {
 
+  // Storing the profile data in username,oldFullname,oldProfilePicture and oldBio
   const username = useSelector((state : RootState) => state.profileData.username);
-  const fullname = useSelector((state : RootState) => state.profileData.fullname);
-  const profile_picture = useSelector((state : RootState) => state.profileData.profile_picture);
-  const bio = useSelector((state : RootState) => state.profileData.bio);
+  const oldFullname = useSelector((state : RootState) => state.profileData.fullname);
+  const oldProfilePicture = useSelector((state : RootState) => state.profileData.profilePicture);
+  const oldBio = useSelector((state : RootState) => state.profileData.bio).replace(/<br\s*[/]?>/gi, '\n');
+
+  // Storing the same profile data in newFullname,newProfilePicture and newBio as well which will be updated based on the changes made by the user.
+  const newFullname = useSelector((state : RootState) => state.editProfileData.newFullname);
+  const newProfilePicture = useSelector((state : RootState) => state.editProfileData.newProfilePicture);
+  const newBio = useSelector((state : RootState) => state.editProfileData.newBio).replace(/<br\s*[/]?>/gi, '\n');
+
   const dispatch = useDispatch();
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  
-  const [newImage,setNewImage] = useState(profile_picture);
-
-  const [newFullname,setNewFullname] = useState(fullname);
-  
-  const bioWithLineBreaks = bio.replace(/<br\s*[/]?>/gi, '\n');
-  const [newBio,setNewBio] = useState(bioWithLineBreaks);
   
   const [dropdown,setDropdown] = useState(false);
 
@@ -46,9 +46,10 @@ export function EditDrawer() {
   },[newBio]);
 
   function handleCancel(){
-    setNewFullname(fullname);
-    setNewBio(bioWithLineBreaks);
-    setNewImage(profile_picture);
+    // If we click 'Cancel' then we restore the previous data
+    dispatch(setNewFullname(oldFullname));
+    dispatch(setNewBio(oldBio)); 
+    dispatch(setNewProfilePicture(oldProfilePicture));
     setDropdown(false); // // If i close the dialog when the dropdown is open then when i open the dialog again the dropdown is already open so to close when the dialog is close we set the dropdown state to false.
   }
 
@@ -62,19 +63,27 @@ export function EditDrawer() {
     // },3000);
 
     const response = await axios.post('/api/editProfile',{
-      image : newImage,
+      image : newProfilePicture,
       fullname : newFullname,
       bio : newBio,
       currentUser : username
     })
 
     if(response){
+      // after we get the response (which means that the entry is made in the database) we set the loading to false and close the dialog.
       setLoading(false);
       setOpenDrawer(false);
+
+  
+      // We update the profile data with the changes made by the user. We update the new data in newFullname, newProfilePicture and newBio using setNewFullname, setNewProfilePicture and setNewBio. We pass this new data to fullname, profilePicture and bio using setFullname, setProfilePicture and setBio to display the updated profile data. 
+      
+      dispatch(setNewFullname(newFullname));
+      dispatch(setNewBio(newBio));
+      dispatch(setNewProfilePicture(newProfilePicture));
+      
       dispatch(setFullname(newFullname));
-      const bioWithLineBreaks = newBio.replace(/\n/g, '<br/>');
-      dispatch(setBio(bioWithLineBreaks));
-      dispatch(setProfilePicture(newImage));
+      dispatch(setBio(newBio.replace(/\n/g, '<br/>')));
+      dispatch(setProfilePicture(newProfilePicture));    
     }
   }
 
@@ -140,7 +149,7 @@ export function EditDrawer() {
                                       // Once the image is successfully uploaded , we set the image Loading state to False.
                                       setImageLoading(false);
                                       // We update the new Image with the image that was uploaded
-                                      setNewImage(res[0].url);
+                                      dispatch(setNewProfilePicture(res[0].url));
                                   }}
                                   onUploadError={(error: Error) => {
                                       // Erorr while uploading
@@ -165,7 +174,7 @@ export function EditDrawer() {
 
                               <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#1d1d1d] rounded-b-xl" onClick={() => {
                                   // When we click "Remove current picture" we remove the picture and replace with a common 'no user image'
-                                  setNewImage('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg');
+                                  dispatch(setNewProfilePicture('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg'));
                                   // And also close the dropdown after the "Remove current picture is clicked"
                                   setDropdown(false);
                               }}>Remove current picture</button>
@@ -183,7 +192,7 @@ export function EditDrawer() {
                       
                         <div className="w-[55px] h-[55px] relative">
                           <Image
-                            src={newImage}
+                            src={newProfilePicture}
                             fill
                             alt="profile_picture"
                             className="rounded-full object-cover"
@@ -197,66 +206,15 @@ export function EditDrawer() {
 
                 <div className="pb-3 border-b border-[#d7d7d7] dark:border-[#464646] space-y-1">
                     <p className="font-medium">Fullname</p>                  
-                    <input type="text" className="w-full outline-none dark:bg-[#121212]" value={newFullname} onChange={(e) => setNewFullname(e.target.value)} maxLength={21} required/>
+                    <input type="text" className="w-full outline-none dark:bg-[#121212]" maxLength={21} value={newFullname} onChange={(e) => dispatch(setNewFullname(e.target.value))} required/>
                 </div>
 
                 <div className="space-y-1">
                     <p className="font-medium">Bio</p>                 
-                    <textarea className="w-full resize-none overflow-hidden outline-none dark:bg-[#121212]" value={newBio} onChange={(e)=>{setNewBio(e.target.value)}} ref={textAreaRef} required></textarea>
+                    <textarea className="w-full resize-none overflow-hidden outline-none dark:bg-[#121212]" value={newBio} onChange={(e)=> {dispatch(setNewBio(e.target.value))}} ref={textAreaRef} required></textarea>
                 </div>
 
             </div>  
-
-            {/* {
-                dropdown &&
-                <div className="absolute top-[195px] right-12 flex flex-col shadow-xl rounded-xl border dark:border-[#2f2f2f]">
-                    
-                    <UploadButton endpoint='imageUploader'
-                    
-                        onUploadProgress={()=>{
-                            // When we click "Upload picture" present in the dropdown , we should be able to upload the file and the dropdown should be closed.
-                            setDropdown(false);
-                            // When the image is being uploaded we set the imageLoading state to true.
-                            setImageLoading(true);
-                        }}
-
-                        onClientUploadComplete={(res) => {
-                        // Do something with the response
-                            console.log("Files: ", res);
-                            // Once the image is successfully uploaded , we set the image Loading state to False.
-                            setImageLoading(false);
-                            // We update the new Image with the image that was uploaded
-                            setNewImage(res[0].url);
-                        }}
-                        onUploadError={(error: Error) => {
-                            // Erorr while uploading
-                            alert(`ERROR! ${error.message}`);
-                        }}
-
-                        appearance={{
-                        allowedContent : 'hidden',
-                        button : 'w-full flex justify-start p-4 py-6 font-medium border-b dark:border-b-[#2f2f2f] bg-white dark:bg-[#1d1d1d] text-black dark:text-white rounded-none rounded-t-xl'
-                        }}
-
-                        content={{      
-                            button({ready}){
-                              if(ready)
-                              return <>
-                               Upload picture              
-                              </>
-                            },
-                          }}
-
-                    />
-
-                    <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#1d1d1d] rounded-b-xl" onClick={() => {
-                        // When we click "Remove current picture" we remove the picture and replace with a common 'no user image'
-                        setNewImage('https://utfs.io/f/c88b510d-bab2-4ae3-b51c-01a0b36bba0e-y4xwt3.jpg');
-                        // And also close the dropdown after the "Remove current picture is clicked"
-                        setDropdown(false);
-                    }}>Remove current picture</button>
-                </div>
-            }       */}
 
         </div>
 
