@@ -14,6 +14,8 @@ import {
 import { X } from "lucide-react"
 import Skeleton from "react-loading-skeleton"
 import Loader from "./Loader"
+import { useSelector } from "react-redux"
+import { RootState } from "@/app/Redux/store"
 
 export function CreateDialog() {
 
@@ -23,6 +25,8 @@ export function CreateDialog() {
   const [imageLoading,setImageLoading] = useState(false);
   const [loading,setLoading] = useState(false);
   const [openDialog,setOpenDialog] = useState(false);
+  const username = useSelector((state : RootState) => state.profileData.username);
+  const profilePicture = useSelector((state : RootState) => state.profileData.profilePicture);
 
   // It is used to resize (go to new line) the textarea field when it exceeds the width of textarea or when we press enter. 
   useEffect(() => {
@@ -107,20 +111,20 @@ export function CreateDialog() {
 
         <div className="w-full h-[1px] bg-[#d7d7d7] dark:bg-[#464646]"/>
 
-        <div className="flex pt-6 pb-10 px-10 items-start gap-3 w-full">
+        <div className="flex pt-6 pb-10 px-10 items-start gap-[14px] w-full">
 
           <div className="w-[45px] h-[45px] relative">
             <Image
-              src='/assets/images/user.png'
+              src={profilePicture}
               fill
               alt="profile-icon" 
-              className="rounded-full object-contain"
+              className="rounded-full object-cover"
             />
           </div>
 
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-[87%]">
 
-            <p className="font-medium">Leslie Dsilva</p>
+            <p className="font-medium">{username}</p>
             
             <textarea placeholder="Start a thread..." rows={1} className="bg-white dark:bg-[#171717] outline-none resize-none overflow-hidden mb-2 placeholder:text-[#afafaf]  dark:placeholder:text-[#7a7a7a]" value={userThread} onChange={(e) => setUserThread(e.target.value)} ref={textAreaRef} required/>
 

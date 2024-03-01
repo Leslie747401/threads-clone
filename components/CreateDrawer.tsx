@@ -1,12 +1,14 @@
 'use client'
 
 import Image from "next/image"
-import { useState , useEffect , useRef } from "react"
+import { useState , useEffect , useRef, use } from "react"
 import { UploadButton } from "@/utils/uploadthing"
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
 import { X } from "lucide-react"
 import Loader from "./Loader"
 import Skeleton from "react-loading-skeleton"
+import { RootState } from "@/app/Redux/store"
+import { useSelector } from "react-redux"
 
 export function CreateDrawer() {
 
@@ -16,6 +18,8 @@ export function CreateDrawer() {
   const [imageLoading,setImageLoading] = useState(false);
   const [loading,setLoading] = useState(false);
   const [openDrawer,setOpenDrawer] = useState(false);
+  const username = useSelector((state : RootState) => state.profileData.username);
+  const profilePicture = useSelector((state : RootState) => state.profileData.profilePicture);
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -90,7 +94,7 @@ export function CreateDrawer() {
 
           <div className="w-[45px] h-[45px] relative">
             <Image
-              src='/assets/images/user.png'
+              src={profilePicture}
               fill
               alt="profile-icon"
               className="rounded-full object-cover"
@@ -99,7 +103,7 @@ export function CreateDrawer() {
 
           <div className="flex flex-col w-[85%]">
 
-          <p className="font-medium">Leslie Dsilva</p>
+          <p className="font-medium">{username}</p>
     
           <textarea placeholder="Start a thread..." rows={1} className="bg-white dark:bg-[#171717] outline-none resize-none overflow-hidden mb-2 placeholder:text-[#afafaf]  dark:placeholder:text-[#7a7a7a]" value={userThread} onChange={(e) => setUserThread(e.target.value)} ref={textAreaRef} required/>
 
