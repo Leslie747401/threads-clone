@@ -8,6 +8,7 @@ import { useSession } from "@clerk/nextjs";
 import { useDispatch } from "react-redux";
 import { setBio, setFullname, setNumberOfFollowers, setNumberOfFollowing, setNumberOfThreads, setProfilePicture, setUsername, setprofileSkeletonLoading } from "../Redux/States/ProfileState/ProfileSlice";
 import { setNewBio, setNewFullname, setNewProfilePicture } from "../Redux/States/EditProfileState/EditProfileSlice";
+
 export default async function Home() {
 
   const session_data = useSession();

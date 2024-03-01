@@ -28,6 +28,7 @@ export default function Search() {
         email : session_email
       });
       
+      console.log(response.data.data);
       setUsers(response.data.data.rows);
     }
 
