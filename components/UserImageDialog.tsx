@@ -7,9 +7,9 @@ import { X } from "lucide-react"
 import { RootState } from "@/app/Redux/store"
 import { useSelector } from "react-redux"
 
-export function ProfileImageDialog() {
+export function UserImageDialog() {
 
-  const profile_picture = useSelector((state : RootState) => state.profileData.profilePicture);
+  const profile_picture = useSelector((state : RootState) => state.dynamicUser.profilePicture);
 
   return (
     <Dialog>

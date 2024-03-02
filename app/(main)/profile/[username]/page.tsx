@@ -14,6 +14,7 @@ import { ProfileImageDialog } from "@/components/ProfileImageDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { setDynamicBio, setDynamicFullname, setDynamicNumberOfFollowers, setDynamicNumberOfFollowing, setDynamicNumberOfThreads, setDynamicProfilePicture, setDynamicUsername } from "@/app/Redux/States/DynamicUserState/DynamicUserSlice";
 import { RootState } from "@/app/Redux/store";
+import { UserImageDialog } from "@/components/UserImageDialog";
 
 export default function UserProfilePage({params} : {params : {username : string}}) {
 
@@ -90,7 +91,7 @@ export default function UserProfilePage({params} : {params : {username : string}
 
       <div className="flex justify-between items-center mb-3 mx-5">
 
-        { skeletonLoading ?  <Skeleton width={84} height={84} circle/> : <ProfileImageDialog/> }
+        { skeletonLoading ?  <Skeleton width={84} height={84} circle/> : <UserImageDialog/> }
 
         <div className="w-[75%] flex justify-between">
           <div className="w-[30%] flex flex-col gap-1 items-center">
