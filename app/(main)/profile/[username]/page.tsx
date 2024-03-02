@@ -11,23 +11,24 @@ import axios from "axios";
 import Loader from "@/components/Loader";
 import Skeleton from "react-loading-skeleton";
 import { ProfileImageDialog } from "@/components/ProfileImageDialog";
-import { useDispatch } from "react-redux";
-import { setProfilePicture } from "@/app/Redux/States/ProfileState/ProfileSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setDynamicBio, setDynamicFullname, setDynamicNumberOfFollowers, setDynamicNumberOfFollowing, setDynamicNumberOfThreads, setDynamicProfilePicture, setDynamicUsername } from "@/app/Redux/States/DynamicUserState/DynamicUserSlice";
+import { RootState } from "@/app/Redux/store";
 
 export default function UserProfilePage({params} : {params : {username : string}}) {
 
   const [activeTab,setActiveTab] = useState('Threads');
   const isMobile = useMediaQuery({ maxWidth : 640 });
   const session_data = useSession();
-  const [fullname,setFullname] = useState();
-  const [username,setUsername] = useState();
-  const [bio,setBio] = useState('');
-  const [numberOfThreads,setNumberOfThreads] = useState();
-  const [numberOfFollowers,setNumberOfFollowers] = useState();
-  const [numberOfFollowing,setNumberOfFollowing] = useState();
+  const username = useSelector((state : RootState) => state.dynamicUser.username);
+  const fullname = useSelector((state : RootState) => state.dynamicUser.fullname);
+  const bio = useSelector((state : RootState) => state.dynamicUser.bio);
+  const numberOfThreads = useSelector((state : RootState) => state.dynamicUser.numberOfThreads);
+  const numberOfFollowers = useSelector((state : RootState) => state.dynamicUser.numberOfFollowers);
+  const numberOfFollowing = useSelector((state : RootState) => state.dynamicUser.numberOfFollowing);
+  const [skeletonLoading,setSkeletonLoading] = useState(true);
   const [loading,setLoading] = useState(false);
   const [buttontext,setButtontext] = useState('Follow');
-  const [skeletonLoading,setSkeletonLoading] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,14 +42,24 @@ export default function UserProfilePage({params} : {params : {username : string}
       if(response){
         setSkeletonLoading(false);
 
-        setFullname(response.data.user[0].fullname);
-        setUsername(response.data.user[0].username);
-        setBio(response.data.user[0].bio);
-        dispatch(setProfilePicture(response.data.user[0].profile_picture));
+        // setFullname(response.data.user[0].fullname);
+        // setUsername(response.data.user[0].username);
+        // setBio(response.data.user[0].bio);
+        // setProfilePicture(response.data.user[0].profile_picture);
   
-        setNumberOfThreads(response.data.thread[0].count); 
-        setNumberOfFollowers(response.data.followers[0].count); 
-        setNumberOfFollowing(response.data.following[0].count); 
+        // setNumberOfThreads(response.data.thread[0].count); 
+        // setNumberOfFollowers(response.data.followers[0].count); 
+        // setNumberOfFollowing(response.data.following[0].count); 
+
+        dispatch(setDynamicUsername(response.data.user[0].username));
+        dispatch(setDynamicFullname(response.data.user[0].fullname));
+        dispatch(setDynamicBio(response.data.user[0].bio));
+        dispatch(setDynamicProfilePicture(response.data.user[0].profile_picture));
+        
+        dispatch(setDynamicNumberOfThreads(response.data.thread[0].count));
+        dispatch(setDynamicNumberOfFollowers(response.data.followers[0].count));
+        dispatch(setDynamicNumberOfFollowing(response.data.following[0].count));
+
       }
     }
 
