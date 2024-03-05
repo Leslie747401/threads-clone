@@ -3,25 +3,19 @@
 import Image from "next/image"
 import { useState , useEffect , useRef } from "react"
 import { UploadButton } from "@/utils/uploadthing"
-
-
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { X } from "lucide-react"
 import Skeleton from "react-loading-skeleton"
 import Loader from "./Loader"
 import { useSelector } from "react-redux"
 import { RootState } from "@/app/Redux/store"
+import axios from "axios"
 
 export function CreateDialog() {
 
   const [userThread, setUserThread] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [postImage,setPostImage] = useState<string>();
+  const [postImage,setPostImage] = useState<string>('');
   const [imageLoading,setImageLoading] = useState(false);
   const [loading,setLoading] = useState(false);
   const [openDialog,setOpenDialog] = useState(false);
@@ -39,10 +33,24 @@ export function CreateDialog() {
   async function handleShare(){
     setLoading(true);
 
-    setTimeout(()=>{                // Fake Delay
-        setLoading(false);
-        setOpenDialog(false);
-    },3000);
+    // setTimeout(()=>{                // Fake Delay
+    //     setLoading(false);
+    //     setOpenDialog(false);
+    // },3000);
+
+    const response = await axios.post('/api/postThread',{
+      image : postImage,
+      text : userThread,
+      currentUser : username,
+      currentUserProfilePicture : profilePicture
+    });
+
+    if(response){
+      setLoading(false);
+      setOpenDialog(false);
+      setUserThread(''); 
+      setPostImage('');
+    }
   }
 
   async function handleCancel(){
@@ -105,7 +113,7 @@ export function CreateDialog() {
           
           <p className="font-medium h-[28px]">New Thread</p>
           
-          <button className={`${imageLoading ? 'text-blue-500 h-[28px] w-[52px] flex justify-center pointer-events-none' : 'text-blue-500 h-[28px] w-[52px] flex justify-center'}`} onClick={handleShare}>{loading ? <Loader/> : 'Share'}</button>
+          <button className={`${imageLoading || !userThread || !postImage ? 'text-blue-300  h-[28px] w-[52px] flex justify-center pointer-events-none' : 'text-blue-500 h-[28px] w-[52px] flex justify-center'}`} onClick={handleShare}>{loading ? <Loader/> : 'Share'}</button>
         
         </div>
 
@@ -124,7 +132,15 @@ export function CreateDialog() {
 
           <div className="flex flex-col w-[87%]">
 
-            <p className="font-medium">{username}</p>
+            <div className="flex gap-[6px] items-center">
+              <p className="font-medium">{username}</p>
+              <Image
+                    src='/assets/images/blue-tick.png'
+                    width={16}
+                    height={16}
+                    alt='icon'
+              />
+            </div>
             
             <textarea placeholder="Start a thread..." rows={1} className="bg-white dark:bg-[#171717] outline-none resize-none overflow-hidden mb-2 placeholder:text-[#afafaf]  dark:placeholder:text-[#7a7a7a]" value={userThread} onChange={(e) => setUserThread(e.target.value)} ref={textAreaRef} required/>
 

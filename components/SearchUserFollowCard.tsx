@@ -18,7 +18,15 @@ export default function SearchUserFollowCard(props : {image: string | StaticImpo
               />
             </div>
             <div className='flex-col font-medium'>
-                <p className='font-medium text-[15px]'>{props.username}</p>
+                <div className='flex gap-[6px] items-center'>
+                  <p className='font-medium text-[15px]'>{props.username}</p>
+                  <Image
+                    src='/assets/images/blue-tick.png'
+                    width={16}
+                    height={16}
+                    alt='icon'
+                  />
+                </div>
                 <p className='text-gray-400 text-sm dark:text-gray-500'>{props.fullname}</p>
             </div>
         </div>

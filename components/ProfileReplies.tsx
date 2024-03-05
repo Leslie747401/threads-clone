@@ -5,7 +5,7 @@ export default function  ProfileReplies() {
 
   return (
     <>
-        <div className="w-full sm:w-[100%] sm:mx-auto h-[1px] bg-gray-300 dark:bg-gray-600"/>
+      <div className="w-full sm:w-[94%] sm:mx-auto h-[1px] bg-gray-300 dark:bg-gray-600"/>
 
         <div className="sm:w-full flex items-start gap-3 mx-5 mt-4">
 

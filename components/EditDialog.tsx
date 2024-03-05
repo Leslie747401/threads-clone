@@ -192,7 +192,6 @@ export function EditDialog() {
                               </>
                             },
                           }}
-
                     />
 
                     <button className="flex justify-start pl-4 pr-6 text-red-500 font-medium py-3 bg-white dark:bg-[#242424] rounded-b-xl" onClick={() => {

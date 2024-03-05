@@ -10,11 +10,20 @@ import { useSession } from "@clerk/nextjs";
 import axios from "axios";
 import Loader from "@/components/Loader";
 import Skeleton from "react-loading-skeleton";
-import { ProfileImageDialog } from "@/components/ProfileImageDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { setDynamicBio, setDynamicFullname, setDynamicNumberOfFollowers, setDynamicNumberOfFollowing, setDynamicNumberOfThreads, setDynamicProfilePicture, setDynamicUsername } from "@/app/Redux/States/DynamicUserState/DynamicUserSlice";
 import { RootState } from "@/app/Redux/store";
 import { UserImageDialog } from "@/components/UserImageDialog";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { setNumberOfFollowers } from "@/app/Redux/States/ProfileState/ProfileSlice";
+
+interface profileThread {
+  thread_text : string;
+  thread_image : string;
+  created_at : string,
+  like_count : Number,
+  reply_count : Number
+}
 
 export default function UserProfilePage({params} : {params : {username : string}}) {
 
@@ -31,26 +40,22 @@ export default function UserProfilePage({params} : {params : {username : string}
   const [loading,setLoading] = useState(false);
   const [buttontext,setButtontext] = useState('Follow');
   const dispatch = useDispatch();
+  const profilePicture = useSelector((state : RootState) => state.profileData.profilePicture);
+  const loggedInUser = useSelector((state : RootState) => state.profileData.username);
+  const [getprofileThreads,setGetProfileThreads] = useState<profileThread[]>();
+  const [profileThreadsLoading,setProfileThreadsLoading] = useState(true);
 
   useEffect(() => {
 
     // it gets profile data of dynamic user based on the username
     async function getUserInfo(){
       const response = await axios.post('/api/getUserData',{
-        username : params.username
+        username : params.username,
+        currentUser : loggedInUser
       });
 
       if(response){
-        setSkeletonLoading(false);
-
-        // setFullname(response.data.user[0].fullname);
-        // setUsername(response.data.user[0].username);
-        // setBio(response.data.user[0].bio);
-        // setProfilePicture(response.data.user[0].profile_picture);
-  
-        // setNumberOfThreads(response.data.thread[0].count); 
-        // setNumberOfFollowers(response.data.followers[0].count); 
-        // setNumberOfFollowing(response.data.following[0].count); 
+        setSkeletonLoading(false); 
 
         dispatch(setDynamicUsername(response.data.user[0].username));
         dispatch(setDynamicFullname(response.data.user[0].fullname));
@@ -60,6 +65,14 @@ export default function UserProfilePage({params} : {params : {username : string}
         dispatch(setDynamicNumberOfThreads(response.data.thread[0].count));
         dispatch(setDynamicNumberOfFollowers(response.data.followers[0].count));
         dispatch(setDynamicNumberOfFollowing(response.data.following[0].count));
+
+        if(response.data.relationshipExists){
+          setButtontext('Following');
+        }
+
+        else{
+          setButtontext('Follow');
+        }
 
       }
     }
@@ -71,21 +84,81 @@ export default function UserProfilePage({params} : {params : {username : string}
     
   },[session_data.session]);
 
-  // it renders a loader after clicking the follow button and changes to following button after the entry is made in the database and vice versa.
-  function handlefollow(){
-    setLoading(true);
-    setTimeout(()=>{
-      if(buttontext=== 'Follow'){
-        setLoading(false);
-        setButtontext('Following');
-      }
-      else{
-        setLoading(false);
-        setButtontext('Follow');
-      }
-    },1500)
+  // function handlefollow(){ 
+    
+  //   setLoading(true);
+
+  //   setTimeout(()=>{
+  //     if(buttontext=== 'Follow'){
+  //       setLoading(false);
+  //       setButtontext('Following');
+  //     }
+  //      else{
+  //        setLoading(false);
+  //       setButtontext('Follow');
+  //     }
+  //   },1500);
+  // }
+
+  async function Follow(){
+    const response = await axios.post('/api/Follow', {
+      usernameOfTheUserYouWantToFollow: params.username,
+      currentUser: loggedInUser 
+    });
+  
+    if(response){
+      dispatch(setDynamicNumberOfFollowers(response.data.updatedFollowers.rows[0].count));
+      dispatch(setNumberOfFollowers(response.data.updatedFollowing.rows[0].count));
+      setLoading(false);
+      setButtontext('Following');
+    }
   }
 
+  async function Unfollow(){
+    const response = await axios.post('/api/Unfollow', {
+      usernameOfTheUserYouWantToUnFollow: params.username,
+      currentUser: loggedInUser 
+    });
+  
+    if (response){
+      dispatch(setDynamicNumberOfFollowers(response.data.updatedFollowers.rows[0].count));
+      dispatch(setNumberOfFollowers(response.data.updatedFollowing.rows[0].count));
+      setLoading(false);
+      setButtontext('Follow');
+    }
+  }
+
+  // it renders a loader after clicking the follow button and changes to following button after the entry is made in the database and vice versa.
+  function handlefollow() {
+
+    setLoading(true);
+    
+    if(buttontext === 'Follow'){
+      Follow();
+    } 
+    
+    else {
+      Unfollow();
+    }
+  
+  }
+
+  useEffect(()=>{
+    async function getProfileThreads(){
+      const response = await axios.post('/api/getProfileThreads',{
+        username : username
+      });
+      
+      if(response){
+        setProfileThreadsLoading(false);
+        setGetProfileThreads(response.data.threads.rows);
+      }
+    }
+
+      getProfileThreads();
+
+  },[])
+  
   return (
     <div className="sm:w-[65%] sm:mx-auto lg:w-[60%] xl:w-[40%] pt-[74px] sm:pt-12 pb-16">
 
@@ -95,17 +168,17 @@ export default function UserProfilePage({params} : {params : {username : string}
 
         <div className="w-[75%] flex justify-between">
           <div className="w-[30%] flex flex-col gap-1 items-center">
-            <p className="font-semibold">{skeletonLoading ? <Skeleton width={25} height={25}/> : numberOfThreads}</p>           {/* 916 */}
+            <p className="font-semibold">{skeletonLoading || loading ? <Skeleton width={25} height={25}/> : numberOfThreads}</p>           {/* 916 */}
             <p className="text-sm">Threads</p>
           </div>
           
           <div className="w-[30%] flex flex-col gap-1 items-center">
-            <p className="font-semibold">{skeletonLoading ? <Skeleton width={25} height={25} /> : numberOfFollowers}</p>         {/* 165 */}
+            <p className="font-semibold">{skeletonLoading || loading ? <Skeleton width={25} height={25} /> : numberOfFollowers}</p>         {/* 165 */}
             <p className="text-sm">Followers</p>
           </div>
           
           <div className="w-[30%] flex flex-col gap-1 items-center">
-            <p className="font-semibold">{skeletonLoading ? <Skeleton width={25} height={25}/> : numberOfFollowing  }</p>         {/* 303 */}
+            <p className="font-semibold">{skeletonLoading || loading ? <Skeleton width={25} height={25}/> : numberOfFollowing  }</p>         {/* 303 */}
             <p className="text-sm">Following</p>
           </div>
         </div>
@@ -123,11 +196,11 @@ export default function UserProfilePage({params} : {params : {username : string}
 
       <div className='flex justify-between mb-8 mx-5'>
 
-        <button className={`${buttontext === 'Follow' ? 'w-[48%] bg-black hover:bg-black dark:bg-white dark:hover:bg-white  text-white dark:text-black rounded-xl' : 'w-[48%] bg-white text-black hover:bg-white dark:bg-[#121212] dark:hover:bg-[#121212] dark:text-white rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]'} `} onClick={handlefollow} disabled={loading}>
-          { loading ?
-           <div  className="relative top-0 left-[45%]">
-             <Loader/>
-           </div>: buttontext }
+        <button className={`${buttontext === 'Follow' ? 'w-[48%] bg-black hover:bg-black dark:bg-white dark:hover:bg-white  text-white dark:text-black rounded-xl' : 'w-[48%] bg-white text-black hover:bg-white dark:bg-[#121212] dark:hover:bg-[#121212] dark:text-white rounded-xl border border-[#d4d4d4] dark:border dark:border-[#373737]'} `} onClick={handlefollow} disabled={loading || skeletonLoading}>
+            { loading || skeletonLoading ?
+            <div  className="relative top-0 left-[45%]">
+              <Loader/>
+            </div>: buttontext }
         </button>
 
         { isMobile ? <ShareDrawer/> : <ShareDialog/> }
@@ -143,15 +216,27 @@ export default function UserProfilePage({params} : {params : {username : string}
       </div>
 
       {
-        activeTab === 'Threads' &&
-
-        <>
-          <ProfileThread/>
-          <ProfileThread/>
-          <ProfileThread/>
-          <ProfileThread/>
-          <ProfileThread/>
-        </>
+        profileThreadsLoading ? 
+        
+          <div className="w-full flex justify-center mt-40">
+            <Loader/>
+          </div>
+        
+        :
+          ( activeTab === 'Threads' &&
+            getprofileThreads && getprofileThreads.map((thread : profileThread)=>(
+              <ProfileThread
+                key={username}
+                username={username}
+                profilePicture={profilePicture}
+                text={thread.thread_text}
+                image={thread.thread_image}
+                time={thread.created_at}
+                likeCount={thread.like_count}
+                replyCount={thread.reply_count}
+              />
+            ))
+          )
       }
 
       {

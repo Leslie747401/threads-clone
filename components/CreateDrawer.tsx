@@ -103,7 +103,15 @@ export function CreateDrawer() {
 
           <div className="flex flex-col w-[85%]">
 
-          <p className="font-medium">{username}</p>
+          <div className="flex gap-[6px] items-center">
+              <p className="font-medium">{username}</p>
+              <Image
+                    src='/assets/images/blue-tick.png'
+                    width={16}
+                    height={16}
+                    alt='icon'
+              />
+          </div>
     
           <textarea placeholder="Start a thread..." rows={1} className="bg-white dark:bg-[#171717] outline-none resize-none overflow-hidden mb-2 placeholder:text-[#afafaf]  dark:placeholder:text-[#7a7a7a]" value={userThread} onChange={(e) => setUserThread(e.target.value)} ref={textAreaRef} required/>
 
@@ -185,7 +193,7 @@ export function CreateDrawer() {
 
     </div>
 
-</DrawerContent>
+  </DrawerContent>
 
     </Drawer>
   )

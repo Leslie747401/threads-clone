@@ -35,11 +35,15 @@ export function ShareDrawer() {
         
       </DrawerTrigger>
 
-      <DrawerContent className="w-full rounded-t-[40px] border-none">
+      <DrawerContent className="w-full rounded-t-[25px] border-none">
 
         
-      <div className="p-8 px-10 flex justify-between items-center">
+      {/* <div className="p-8 px-10 flex justify-between items-center">
             <p className="font-medium text-xl">Share Profile</p>
+        </div> */}
+
+        <div className="w-full flex justify-center pb-10 pt-5">
+          <div className="w-[75px] h-[4px] rounded-3xl bg-gray-300 dark:!bg-gray-500"></div>
         </div>
 
         <div className="pb-8 px-10 flex justify-between">
