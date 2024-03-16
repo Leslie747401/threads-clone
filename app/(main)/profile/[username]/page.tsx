@@ -15,7 +15,7 @@ import { setDynamicBio, setDynamicFullname, setDynamicNumberOfFollowers, setDyna
 import { RootState } from "@/app/Redux/store";
 import { UserImageDialog } from "@/components/UserImageDialog";
 import { setAfterFetchingUsername, setNumberOfFollowers } from "@/app/Redux/States/ProfileState/ProfileSlice";
-import { Room } from "@/components/Room";
+// import { Room } from "@/components/Room";
 // import { useBroadcastEvent } from "@/liveblocks.config";
 
 interface profileThread {
