@@ -1,10 +1,8 @@
 'use client'
 
 import CommentThread from "@/components/CommentThread";
-import HomeThread from "@/components/HomeThread";
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { useMediaQuery } from "react-responsive";
 
 interface Thread {
     thread_id : number;
@@ -17,7 +15,7 @@ interface Thread {
     reply_count : Number
   }
 
-export default function page({params} : {params : {thread_id : string}}) {
+export default function ThreadsPage({params} : {params : {thread_id : string}}) {
 
   const [thread,setThread] = useState<Thread[]>([]);
 

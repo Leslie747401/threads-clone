@@ -105,6 +105,7 @@ export default function Activity() {
               {
                 allFollowsArray.map((f)=>(
                   <ActivityFollow
+                    key={f.created_at}
                     username={f.activity_username}
                     image={f.activity_image}
                     message={f.message}
@@ -124,6 +125,7 @@ export default function Activity() {
               {
                 allFollowsArray.map((f)=>(
                   <ActivityFollow
+                    key={f.created_at}
                     username={f.activity_username}
                     image={f.activity_image}
                     message={f.message}
