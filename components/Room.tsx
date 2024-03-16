@@ -1,12 +1,12 @@
-"use client";
+// "use client";
 
-import { ReactNode } from "react";
-import { RoomProvider } from '@/liveblocks.config';
+// import { ReactNode } from "react";
+// // import { RoomProvider } from '@/liveblocks.config';
 
-export function Room({ children }: { children: ReactNode }) {
-  return (
-    <RoomProvider id="my-room" initialPresence={{}}>
-        {children}
-    </RoomProvider>
-  );
-}
+// export function Room({ children }: { children: ReactNode }) {
+//   return (
+//     <RoomProvider id="my-room" initialPresence={{}}>
+//         {children}
+//     </RoomProvider>
+//   );
+// }
