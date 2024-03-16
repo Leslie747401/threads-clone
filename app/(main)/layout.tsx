@@ -10,6 +10,7 @@ import ThemeSkeleton from '@/components/ThemeSkeleton'
 import Providers from '../Redux/Providers'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Toaster } from '@/components/ui/toaster'
+import { Room } from '@/components/Room'
 
 const font = Inter({ subsets: ['latin'] })
 
@@ -36,7 +37,9 @@ export default function MainLayout({
                   <MobileNavbar/>
                   <LeftsideBar/>
                     <Toaster/>
-                    {children}
+                      {/* <Room> */}
+                        {children}
+                      {/* </Room> */}
                   <RightsideBar/>
                   <MobileFooter/>
                 </div>

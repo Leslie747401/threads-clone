@@ -9,7 +9,6 @@ export async function POST(request : NextRequest){
     
     unstable_noStore();
     const Threads = await sql`SELECT * FROM Threads WHERE username != ${data.username} LIMIT 3`;
-    // console.log(Threads.rows);
 
     return NextResponse.json({result:true,threads:Threads});
 }

@@ -3,15 +3,18 @@
 import React from 'react'
 import Image from 'next/image'
 import { useRef ,useEffect } from 'react'
-import { Send } from 'lucide-react';
 import moment from 'moment';
 import Link from 'next/link';
-import { ShareThreadFromHomeDesktop } from './ShareThreadFromHomeDesktop';
+import { ShareThreadDialog } from './ShareThreadDialog';
 import { CommentDialog } from './CommentDialog';
+import { useMediaQuery } from 'react-responsive';
+import { ShareThreadDrawer } from './ShareThreadDrawer';
+import { CommentDrawer } from './CommentDrawer';
 
-export default function HomeThread(props : {id: number; threadUsername : string, profilePicture : string, text : string, image : string, time : string, likeCount : Number, replyCount : Number}) {
+export default function CommentThread(props : {id: number; threadUsername : string, profilePicture : string, text : string, image : string, time : string, likeCount : Number, replyCount : Number}) {
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery({ maxWidth : 640 });
 
   useEffect(() => {
     
@@ -104,8 +107,6 @@ export default function HomeThread(props : {id: number; threadUsername : string,
   
   return (
     <>
-      <div className='w-full sm:w-[95%] sm:mx-5 h-[0.5px] bg-gray-300 dark:bg-gray-600'/>
-
         <div className="sm:w-full flex items-start gap-3 mb-1 mx-5 mt-4">
 
             {/* Profile Image and the line */}
@@ -178,9 +179,9 @@ export default function HomeThread(props : {id: number; threadUsername : string,
                         className="dark:hidden"
                     />
 
-                    <CommentDialog/>
+                    {isMobile ? <CommentDrawer/> : <CommentDialog/>}
 
-                    <ShareThreadFromHomeDesktop extended_url={`thread/${props.id}`}/>
+                    {isMobile ? <ShareThreadDrawer/>  : <ShareThreadDialog/>}
 
                 </div>
 

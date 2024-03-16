@@ -95,9 +95,11 @@ export default function Profile() {
       }
     }
 
-    getProfileThreads();
+    if(username){
+      getProfileThreads();
+    }
 
-  },[])
+  },[session_data.session])
 
   return (
     <div className="sm:w-[65%] sm:mx-auto lg:w-[60%] xl:w-[40%] pt-[74px] sm:pt-12 pb-16">

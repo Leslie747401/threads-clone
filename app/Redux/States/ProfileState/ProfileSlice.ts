@@ -12,7 +12,8 @@ export interface ProfileState {
   numberOfFollowers : string,
   numberOfFollowing : string,
   profileSkeletonLoading : boolean,
-  homeSkeletonLoading : boolean
+  homeSkeletonLoading : boolean,
+  afterFetchingUsername : boolean
 }
 
 const initialState: ProfileState = {
@@ -24,7 +25,8 @@ const initialState: ProfileState = {
   numberOfFollowers : '',
   numberOfFollowing : '',
   profileSkeletonLoading : true,
-  homeSkeletonLoading : true
+  homeSkeletonLoading : true,
+  afterFetchingUsername : false
 }
 
 export const profileSlice = createSlice({
@@ -58,10 +60,13 @@ export const profileSlice = createSlice({
     setHomeSkeletonLoading: (state, action: PayloadAction<boolean>) => {
       state.homeSkeletonLoading = action.payload
     },
+    setAfterFetchingUsername: (state, action: PayloadAction<boolean>) => {
+      state.afterFetchingUsername = action.payload
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setUsername, setFullname, setProfilePicture, setBio, setNumberOfThreads, setNumberOfFollowers, setNumberOfFollowing, setprofileSkeletonLoading, setHomeSkeletonLoading } = profileSlice.actions
+export const { setUsername, setFullname, setProfilePicture, setBio, setNumberOfThreads, setNumberOfFollowers, setNumberOfFollowing, setprofileSkeletonLoading, setHomeSkeletonLoading, setAfterFetchingUsername } = profileSlice.actions
 
 export default profileSlice.reducer

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setBio, setFullname, setHomeSkeletonLoading, setNumberOfFollowers, setNumberOfFollowing, setNumberOfThreads, setProfilePicture, setUsername, setprofileSkeletonLoading } from "../Redux/States/ProfileState/ProfileSlice";
 import { setNewBio, setNewFullname, setNewProfilePicture } from "../Redux/States/EditProfileState/EditProfileSlice";
 import { RootState } from "../Redux/store";
-import Loader from "@/components/Loader";
+import { setFollows } from "../Redux/States/ActivityState/ActivitySlice";
 
 export default async function Home() {
 
@@ -19,6 +19,7 @@ export default async function Home() {
   const [getHomeThreads,setGetHomeThreads] = useState<homeThread[]>();
   
   interface homeThread {
+    thread_id : number;
     username : string;
     thread_profilepicture : string;
     thread_text : string;
@@ -86,6 +87,35 @@ export default async function Home() {
     
   },[username]);
 
+  // useEffect(()=> {
+
+  //   async function getFollowNotification(){
+  //     const response = await axios.post('/api/getFollowNotification',{
+  //       username : username
+  //     });
+
+  //     if(response){
+  //       console.log(response.data.data.rows);
+        
+  //       response.data.data.rows.map((m:any)=>(
+  //         dispatch(setFollows(m))
+  //       ))
+  //     }
+ 
+  //   }
+
+  //   if(username!=''){
+  //     getFollowNotification();
+  //   }
+
+  // },[username]);
+
+  // useEffect(() => {
+  //   console.log("allFollows:", allFollows);
+
+  // }, [allFollows]);
+  
+
   return (
     <div className="sm:w-[65%] sm:mx-auto lg:w-[60%] xl:w-[40%] pt-[74px] sm:pt-12 pb-16">
 
@@ -93,20 +123,42 @@ export default async function Home() {
         getHomeThreads && <HomeTabs/>
       }
 
-      {
-        getHomeThreads && getHomeThreads.map((thread : homeThread)=>(
-          <HomeThread
-            key={thread.created_at}
-            threadUsername={thread.username}
-            profilePicture={thread.thread_profilepicture}
-            text={thread.thread_text}
-            image={thread.thread_image}
-            time={thread.created_at}
-            likeCount={thread.like_count}
-            replyCount={thread.reply_count}
-          />
-        ))
-      }
+      {/* {
+        <InfiniteScroll
+          dataLength={}
+        >
+          {
+            getHomeThreads && getHomeThreads.map((thread : homeThread)=>(
+              <HomeThread
+                key={thread.created_at}
+                threadUsername={thread.username}
+                profilePicture={thread.thread_profilepicture}
+                text={thread.thread_text}
+                image={thread.thread_image}
+                time={thread.created_at}
+                likeCount={thread.like_count}
+                replyCount={thread.reply_count}
+              />
+            ))
+          }
+        </InfiniteScroll>
+      } */}
+
+          {
+            getHomeThreads && getHomeThreads.map((thread : homeThread)=>(
+              <HomeThread
+                id={thread.thread_id}
+                key={thread.created_at}
+                threadUsername={thread.username}
+                profilePicture={thread.thread_profilepicture}
+                text={thread.thread_text}
+                image={thread.thread_image}
+                time={thread.created_at}
+                likeCount={thread.like_count}
+                replyCount={thread.reply_count}
+              />
+            ))
+          }
 
     </div>
   );

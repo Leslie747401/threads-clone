@@ -4,12 +4,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import profileReducer from './States/ProfileState/ProfileSlice'
 import editProfileReducer from './States/EditProfileState/EditProfileSlice'
 import dynamicUserReducer from './States/DynamicUserState/DynamicUserSlice'
+import activityReducer from './States/ActivityState/ActivitySlice'
 
 export const store = configureStore({
   reducer: {
     profileData : profileReducer,
     editProfileData : editProfileReducer,
-    dynamicUser : dynamicUserReducer
+    dynamicUser : dynamicUserReducer,
+    activity : activityReducer
   },
 })
 

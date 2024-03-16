@@ -9,6 +9,7 @@ import Loader from "./Loader"
 import Skeleton from "react-loading-skeleton"
 import { RootState } from "@/app/Redux/store"
 import { useSelector } from "react-redux"
+import axios from "axios"
 
 export function CreateDrawer() {
 
@@ -28,20 +29,48 @@ export function CreateDrawer() {
     }
   },[userThread]);
   
-  function handleCancel(){
-    setUserThread('');
-    setPostImage('');
+  // function handleCancel(){
+  //   setUserThread('');
+  //   setPostImage('');
+  // }
+
+  // async function handleDone(){
+
+  //   setLoading(true);
+
+  //   setTimeout(()=>{                // Fake Delay
+  //       setLoading(false);
+  //       setOpenDrawer(false);
+  //   },3000);
+
+  // }
+
+  async function handleCancel(){
+    setUserThread(''); 
+    setPostImage('')
   }
 
   async function handleDone(){
-
     setLoading(true);
 
-    setTimeout(()=>{                // Fake Delay
-        setLoading(false);
-        setOpenDrawer(false);
-    },3000);
+    // setTimeout(()=>{                // Fake Delay
+    //     setLoading(false);
+    //     setOpenDialog(false);
+    // },3000);
 
+    const response = await axios.post('/api/postThread',{
+      image : postImage,
+      text : userThread,
+      currentUser : username,
+      currentUserProfilePicture : profilePicture
+    });
+
+    if(response){
+      setLoading(false);
+      setOpenDrawer(false);
+      setUserThread(''); 
+      setPostImage('');
+    }
   }
 
   return (
@@ -84,7 +113,7 @@ export function CreateDrawer() {
   
           <p className="font-medium">New Thread</p>
   
-          <button className={`${imageLoading ? 'text-blue-500  w-[52px] h-[24px] flex justify-center' : 'text-blue-500  w-[52px] h-[24px] flex justify-center'}`} onClick={handleDone}>{loading ? <Loader/> : 'Share'}</button>
+          <button className={`${imageLoading || !userThread || !postImage ? 'text-blue-300  w-[52px] h-[24px] flex justify-center pointer-events-none' : 'text-blue-500 w-[52px] h-[24px] flex justify-center'}`} onClick={handleDone}>{loading ? <Loader/> : 'Share'}</button>
 
         </div>
 

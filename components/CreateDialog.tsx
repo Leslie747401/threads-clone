@@ -94,14 +94,14 @@ export function CreateDialog() {
 
       <DialogContent className="w-full max-sm:h-screen sm:max-w-[575px] z-50" onInteractOutside={(e) => {
         
-        if(loading || imageLoading){
-          e.preventDefault();
-        }
-      
-        else{
-          setUserThread(''); 
-          setPostImage('');
-        }
+          if(loading || imageLoading){
+            e.preventDefault();
+          }
+        
+          else{
+            setUserThread(''); 
+            setPostImage('');
+          }
         
         }}>
 
