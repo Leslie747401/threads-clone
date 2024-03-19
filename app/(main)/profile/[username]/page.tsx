@@ -23,7 +23,19 @@ interface profileThread {
   thread_image : string;
   created_at : string,
   like_count : Number,
-  reply_count : Number
+  reply_count : string;
+  thread_id : Number;
+  commentprofilepicture1 : string;
+  commentprofilepicture2 : string;
+  commentprofilepicture3 : string;
+}
+
+interface profileComment {
+  thread_id : Number;
+  comment : string;
+  commentuser: string;
+  commentuserprofilepicuture : string;
+  created_at : string
 }
 
 export default function UserProfilePage({params} : {params : {username : string}}) {
@@ -49,6 +61,7 @@ export default function UserProfilePage({params} : {params : {username : string}
   // const [fetchThreads,setFetchThreads] = useState(false);
   // const broadcast = useBroadcastEvent();
   const afterFetchingUsername = useSelector((state:RootState) => state.profileData.afterFetchingUsername);
+  const [getProfileComments,setGetProfileComments] = useState<profileComment[]>([]);
 
   useEffect(() => {
 
@@ -60,7 +73,6 @@ export default function UserProfilePage({params} : {params : {username : string}
       });
 
       if(response){
-        setSkeletonLoading(false);
         console.log(response.data);
 
         dispatch(setDynamicUsername(response.data.user[0].username));
@@ -72,9 +84,10 @@ export default function UserProfilePage({params} : {params : {username : string}
         dispatch(setDynamicNumberOfFollowers(response.data.followers[0].count));
         dispatch(setDynamicNumberOfFollowing(response.data.following[0].count));
 
-
+        setSkeletonLoading(false);
+        setProfileThreadsLoading(false);
         // it is set to true after the data is fetched So we can fetch the user specific threads.
-        dispatch(setAfterFetchingUsername(true));
+        // dispatch(setAfterFetchingUsername(true));
 
         if(response.data.relationshipExists){
           setButtontext('Following');
@@ -169,16 +182,32 @@ export default function UserProfilePage({params} : {params : {username : string}
       });
       
       if(response){
-        setProfileThreadsLoading(false);
         setGetProfileThreads(response.data.threads.rows);
       }
     }
 
-    if(afterFetchingUsername){
+    if(profileThreadsLoading == false){
       getProfileThreads();
     } 
 
-  },[afterFetchingUsername])
+  },[profileThreadsLoading]);
+
+  useEffect(()=>{
+    async function getProfileComments(){
+      const response = await axios.post('/api/getProfileComments',{
+        username : username
+      });
+      
+      if(response){
+        setGetProfileComments(response.data.data.rows);
+      }
+    }
+
+    if(profileThreadsLoading == false){
+      getProfileComments();
+    } 
+
+  },[profileThreadsLoading]);
   
   return (
 
@@ -251,6 +280,7 @@ export default function UserProfilePage({params} : {params : {username : string}
             ( activeTab === 'Threads' &&
               getprofileThreads && getprofileThreads.map((thread : profileThread)=>(
                 <ProfileThread
+                  id={thread.thread_id}
                   key={username}
                   username={username}
                   profilePicture={profilePicture}
@@ -259,6 +289,9 @@ export default function UserProfilePage({params} : {params : {username : string}
                   time={thread.created_at}
                   likeCount={thread.like_count}
                   replyCount={thread.reply_count}
+                  commentprofilepicture1={thread.commentprofilepicture1}
+                  commentprofilepicture2={thread.commentprofilepicture2}
+                  commentprofilepicture3={thread.commentprofilepicture3}
                 />
               ))
             )
@@ -267,13 +300,15 @@ export default function UserProfilePage({params} : {params : {username : string}
         {
           activeTab === 'Replies' &&
 
-          <>
-            <ProfileReplies/>
-            <ProfileReplies/>
-            <ProfileReplies/>
-            <ProfileReplies/>
-            <ProfileReplies/>
-          </>
+            getProfileComments && getProfileComments.map((c : profileComment) => (
+              <ProfileReplies
+                id={c.thread_id}
+                comment={c.comment}
+                commentuser={c.commentuser}
+                commentuserprofilepicuture={c.commentuserprofilepicuture}
+                created_at={c.created_at}
+              />
+            ))
         }
 
       </div>

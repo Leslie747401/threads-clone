@@ -5,13 +5,15 @@ import profileReducer from './States/ProfileState/ProfileSlice'
 import editProfileReducer from './States/EditProfileState/EditProfileSlice'
 import dynamicUserReducer from './States/DynamicUserState/DynamicUserSlice'
 import activityReducer from './States/ActivityState/ActivitySlice'
+import commentReducer from './States/CommentState/CommentSlice'
 
 export const store = configureStore({
   reducer: {
     profileData : profileReducer,
     editProfileData : editProfileReducer,
     dynamicUser : dynamicUserReducer,
-    activity : activityReducer
+    activity : activityReducer,
+    comment : commentReducer
   },
 })
 

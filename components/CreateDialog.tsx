@@ -21,6 +21,8 @@ export function CreateDialog() {
   const [openDialog,setOpenDialog] = useState(false);
   const username = useSelector((state : RootState) => state.profileData.username);
   const profilePicture = useSelector((state : RootState) => state.profileData.profilePicture);
+  console.log("ProfilePicture : " + profilePicture);
+  
 
   // It is used to resize (go to new line) the textarea field when it exceeds the width of textarea or when we press enter. 
   useEffect(() => {
@@ -41,8 +43,8 @@ export function CreateDialog() {
     const response = await axios.post('/api/postThread',{
       image : postImage,
       text : userThread,
+      currentUserProfilePicture : profilePicture,
       currentUser : username,
-      currentUserProfilePicture : profilePicture
     });
 
     if(response){

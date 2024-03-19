@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { useRef ,useEffect } from 'react'
 import moment from 'moment';
@@ -11,7 +11,7 @@ import { useMediaQuery } from 'react-responsive';
 import { ShareThreadDrawer } from './ShareThreadDrawer';
 import { CommentDrawer } from './CommentDrawer';
 
-export default function CommentThread(props : {id: number; threadUsername : string, profilePicture : string, text : string, image : string, time : string, likeCount : Number, replyCount : Number}) {
+export default function CommentThread(props : {id: number; threadUsername : string, threadProfilePicture : string, text : string, image : string, time : string, likeCount : Number, replyCount : string, commentprofilepicture1 : string, commentprofilepicture2 : string, commentprofilepicture3 : string;}) {
 
   const contentRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery({ maxWidth : 640 });
@@ -101,9 +101,9 @@ export default function CommentThread(props : {id: number; threadUsername : stri
   const timeSinceThreadPost = moment(props.time).fromNow();
   console.log(timeSinceThreadPost);
 
-  const replyCount = props.replyCount.toString();
+  const [replyCount,setReplyCount] = useState(props.replyCount);
   const likeCount = props.likeCount.toString();
-  let test_reply_count = 3;
+  // let test_reply_count = 3;
   
   return (
     <>
@@ -112,7 +112,7 @@ export default function CommentThread(props : {id: number; threadUsername : stri
             {/* Profile Image and the line */}
             <div className="flex flex-col gap-2">        
                 <Image
-                    src={props.profilePicture}
+                    src={props.threadProfilePicture}
                     width={45}
                     height={45}
                     alt="profile-image"
@@ -120,6 +120,7 @@ export default function CommentThread(props : {id: number; threadUsername : stri
                 />
 
                 {
+                  parseInt(props.replyCount) != 0 &&
                   // props.replyCount != 0 &&
 
                   <div className="flex justify-center">
@@ -159,31 +160,43 @@ export default function CommentThread(props : {id: number; threadUsername : stri
                       />
                     </div>
                     
-                    <div className="flex gap-4 ml-1">
+                    {/* <div className="flex gap-4 ml-1"> */}
 
                     {/* Heart icon for Black Mode */}
-                    <Image
+                    {/* <Image
                         src='/assets/images/white-activity.png'
                         width={20}
                         height={20}
                         alt="logo"
                         className="hidden dark:block"
-                    />
+                    /> */}
 
                     {/* Heart icon for White Mode */}
-                    <Image
+                    {/* <Image
                         src='/assets/images/black-activity.png'
                         width={20}
                         height={20}
                         alt="logo"
                         className="dark:hidden"
-                    />
+                    /> */}
 
-                    {isMobile ? <CommentDrawer/> : <CommentDialog/>}
+                    {/* {isMobile ? 
+                        <CommentDrawer
+                          threadId={props.id}
+                          threadUsername={props.threadUsername}
+                        /> 
+                      : 
+    
+                        <CommentDialog  
+                            threadId={props.id}
+                            threadUsername={props.threadUsername}
+                            updateReplyCount={setReplyCount}
+                        />
+                    } */}
 
-                    {isMobile ? <ShareThreadDrawer/>  : <ShareThreadDialog/>}
+                    {/* {isMobile ? <ShareThreadDrawer/>  : <ShareThreadDialog/>} */}
 
-                </div>
+                {/* </div> */}
 
             </div> 
             
@@ -195,108 +208,141 @@ export default function CommentThread(props : {id: number; threadUsername : stri
         <div className="flex gap-5 ml-5 mb-4">
 
         {
+          parseInt(props.replyCount) === 1 &&
             // props.replyCount === 1 &&
-            test_reply_count === 1 &&
+            // test_reply_count === 1 &&
 
           <>
             <div className="w-[40px] h-[35px] relative">
 
-              <Image
-                  src='/assets/images/user.png'
+              {
+                props.commentprofilepicture1 &&
+                <Image
+                  src={props.commentprofilepicture1}
                   width={22}
                   height={22}
                   alt="profile-icon"
                   className="absolute top-[6px] left-[11px] border rounded-full"
-              />
+                />
+              }
 
-            </div>
-
-            <div className="flex gap-2 items-center text-gray-500 text-sm">
-              <p>{replyCount} replies</p>
-              <p className="pb-[7px]">.</p>
-              <p>{likeCount} likes</p>
             </div>
 
           </>  
         }
 
         {
+          parseInt(props.replyCount) === 2 &&
             // props.replyCount === 2 &&
-            test_reply_count === 2 &&
+            // test_reply_count === 2 &&
 
           <>
             <div className="w-[40px] h-[35px] relative">
+
               <div className='p-[2px] w-[22px] h-[22px] absolute top-[6px] left-[4px] rounded-full'>
-                <Image
-                    src='/assets/images/user.png'
+                { props.commentprofilepicture1 &&
+                  <Image
+                    src={props.commentprofilepicture1}
                     width={20}
                     height={20}
                     alt="profile-icon"
                     className="border-[1.5px] rounded-full"
-                />
+                  />
+                }
               </div>
 
-              <div className='p-[2px] w-[22px] h-[22px] bg-white absolute top-[6px] left-[18px] rounded-full'>
-                <Image
-                    src='/assets/images/user.png'
+              <div className='p-[2px] w-[22px] h-[22px] absolute top-[6px] left-[18px] rounded-full'>
+                {
+                  props.commentprofilepicture2 &&
+                  <Image
+                    src={props.commentprofilepicture2}
                     width={20}
                     height={20}
                     alt="profile-icon"
                     className="border-[1.5px] rounded-full"
-                />
+                  />
+                }
               </div>
-            </div>
-
-            <div className="flex gap-2 items-center text-gray-500 text-sm">
-              <p>{replyCount} replies</p>
-              <p className="pb-[7px]">.</p>
-              <p>{likeCount} likes</p>
             </div>
 
           </>  
         }
 
         {
+          parseInt(props.replyCount) === 3 &&
           // props.replyCount === 3 &&
-          test_reply_count === 3 &&
+          // test_reply_count === 3 &&
 
           <>
             <div className="w-[40px] h-[35px] relative">
-              <Image
-                  src='/assets/images/user.png'
+              {
+                props.commentprofilepicture1 &&
+                <Image
+                  src={props.commentprofilepicture1}
                   width={20}
                   height={20}
                   alt="profile-icon"
                   className="absolute left-[24px] border rounded-full"
-              />
+                />
+              }
 
-              <Image
-                  src='/assets/images/user.png'
+              {
+                props.commentprofilepicture2 &&
+                <Image
+                  src={props.commentprofilepicture2}
                   width={16}
                   height={16}
                   alt="profile-icon"
                   className="absolute top-[6px] left-[6px] border rounded-full"
-              />
+                />
+              }
 
-              <Image
-                  src='/assets/images/user.png'
+              {
+                props.commentprofilepicture3 &&
+                <Image
+                  src={props.commentprofilepicture3}
                   width={12}
                   height={12}
                   alt="profile-icon"
                   className="absolute bottom-0.5 left-[18px] border rounded-full"
-              />
-            </div>
-
-            <div className="flex gap-2 items-center text-gray-500 text-sm">
-              <Link href={`/thread/${props.id}`}>
-                <p>{replyCount} replies</p>
-              </Link>
-              <p className="pb-[7px]">.</p>
-              <p>{likeCount} likes</p>
+                />
+              }
             </div>
 
           </>  
         }
+
+        { 
+        
+          parseInt(props.replyCount) === 0 ?
+
+            <div className="flex gap-2 items-center text-gray-500 text-sm ml-14 mt-2">
+
+              <Link href={`/thread/${props.id}`}>
+                <p>{replyCount} replies</p>
+              </Link>
+                    
+              <p className="pb-[7px]">.</p>
+                        
+              <p>{likeCount} likes</p>
+
+            </div>
+
+          :
+
+            <div className="flex gap-2 items-center text-gray-500 text-sm">
+                
+              <Link href={`/thread/${props.id}`}>
+                <p>{replyCount} replies</p>
+              </Link>
+                    
+              <p className="pb-[7px]">.</p>
+                        
+              <p>{likeCount} likes</p>
+
+            </div>
+
+          }
 
         </div>
 

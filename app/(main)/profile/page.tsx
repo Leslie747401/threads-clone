@@ -19,13 +19,26 @@ import { useSession } from "@clerk/nextjs";
 import { setBio, setFullname, setNumberOfFollowers, setNumberOfFollowing, setNumberOfThreads, setProfilePicture, setUsername, setprofileSkeletonLoading } from "@/app/Redux/States/ProfileState/ProfileSlice";
 import { setNewBio, setNewFullname, setNewProfilePicture } from "@/app/Redux/States/EditProfileState/EditProfileSlice";
 import Image from "next/image";
+import moment from "moment";
 
 interface profileThread {
   thread_text : string;
   thread_image : string;
-  created_at : string,
-  like_count : Number,
-  reply_count : Number
+  created_at : string;
+  like_count : Number;
+  reply_count : string;
+  thread_id : Number;
+  commentprofilepicture1 : string;
+  commentprofilepicture2 : string;
+  commentprofilepicture3 : string;
+}
+
+interface profileComment {
+  thread_id : Number;
+  comment : string;
+  commentuser: string;
+  commentuserprofilepicuture : string;
+  created_at : string
 }
 
 
@@ -42,9 +55,12 @@ export default function Profile() {
   const profileSkeletonLoading = useSelector((state : RootState) => state.profileData.profileSkeletonLoading);
   const profilePicture = useSelector((state : RootState) => state.profileData.profilePicture);
   const [getprofileThreads,setGetProfileThreads] = useState<profileThread[]>();
-  const [loading,setLoading] = useState(true);
+  const [getProfileComments,setGetProfileComments] = useState<profileComment[]>([]);
+  const [loading1,setLoading1] = useState(true);
+  const [loading2,setLoading2] = useState(true);
   const session_data = useSession();
   const dispatch = useDispatch();
+
 
   // It is used to fetch profile data.
   useEffect(() => {
@@ -90,7 +106,7 @@ export default function Profile() {
       });
       
       if(response){
-        setLoading(false);
+        setLoading1(false);
         setGetProfileThreads(response.data.threads.rows);
       }
     }
@@ -99,7 +115,28 @@ export default function Profile() {
       getProfileThreads();
     }
 
-  },[session_data.session])
+  },[]);
+
+  useEffect(() => {
+    async function getProfileComments(){
+      const response = await axios.post('/api/getProfileComments',{
+        username : username
+      });
+      
+      if(response){
+        setLoading2(false);
+        setGetProfileComments(response.data.data.rows);
+        console.log(response.data.data.rows);
+        
+      }
+    }
+
+    if(username){
+      getProfileComments();
+    }
+
+  },[]);
+
 
   return (
     <div className="sm:w-[65%] sm:mx-auto lg:w-[60%] xl:w-[40%] pt-[74px] sm:pt-12 pb-16">
@@ -153,7 +190,7 @@ export default function Profile() {
       </div>
 
       {
-        loading ? 
+        loading1 ? 
         
           <div className="w-full flex justify-center mt-40">
             <Loader/>
@@ -163,6 +200,7 @@ export default function Profile() {
           ( activeTab === 'Threads' &&
             getprofileThreads && getprofileThreads.map((thread : profileThread)=>(
               <ProfileThread
+                id={thread.thread_id}
                 key={username}
                 username={username}
                 profilePicture={profilePicture}
@@ -171,22 +209,37 @@ export default function Profile() {
                 time={thread.created_at}
                 likeCount={thread.like_count}
                 replyCount={thread.reply_count}
+                commentprofilepicture1={thread.commentprofilepicture1}
+                commentprofilepicture2={thread.commentprofilepicture2}
+                commentprofilepicture3={thread.commentprofilepicture3}
               />
             ))
           )
       }
 
-      {
-        activeTab === 'Replies' &&
+      {/* {
+        loading2 ? 
+        
+          <div className="w-full flex justify-center mt-40">
+            <Loader/>
+          </div>
+        
+        : */}
 
-        <>
-          <ProfileReplies/>
-          <ProfileReplies/>
-          <ProfileReplies/>
-          <ProfileReplies/>
-          <ProfileReplies/>
-        </>
-      }
+          {/* ( */}
+        {
+            activeTab === 'Replies' &&
+            getProfileComments && getProfileComments.map((c : profileComment) => (
+                <ProfileReplies
+                  id={c.thread_id}
+                  comment={c.comment}
+                  commentuser={c.commentuser}
+                  commentuserprofilepicuture={c.commentuserprofilepicuture}
+                  created_at={c.created_at}
+                />
+            ))
+        }
+
 
     </div>
   )

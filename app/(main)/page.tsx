@@ -24,9 +24,12 @@ export default async function Home() {
     thread_profilepicture : string;
     thread_text : string;
     thread_image : string;
-    created_at : string,
-    like_count : Number,
-    reply_count : Number
+    created_at : string
+    like_count : Number;
+    reply_count : string;
+    commentprofilepicture1 : string;
+    commentprofilepicture2 : string;
+    commentprofilepicture3 : string;
   }
 
   // It is used to fetch profile data.
@@ -156,6 +159,9 @@ export default async function Home() {
                 time={thread.created_at}
                 likeCount={thread.like_count}
                 replyCount={thread.reply_count}
+                commentprofilepicture1={thread.commentprofilepicture1}
+                commentprofilepicture2={thread.commentprofilepicture2}
+                commentprofilepicture3={thread.commentprofilepicture3}
               />
             ))
           }

@@ -4,8 +4,9 @@ import { useRef ,useEffect } from 'react'
 import { Send } from 'lucide-react';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import moment from 'moment';
+import Link from 'next/link';
 
-export default function ProfileThread(props : {username : string, profilePicture : string | StaticImport, text : string, image : string, time : string, likeCount : Number, replyCount : Number}) {
+export default function ProfileThread(props : {username : string, profilePicture : string | StaticImport, text : string, image : string, time : string, likeCount : Number, replyCount : string, id : Number, commentprofilepicture1 : string, commentprofilepicture2 : string, commentprofilepicture3 : string;}) {
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -95,9 +96,9 @@ export default function ProfileThread(props : {username : string, profilePicture
   const timeSinceThreadPost = moment(props.time).fromNow();
   console.log(timeSinceThreadPost);
 
-  const replyCount = props.replyCount.toString();
+  const replyCount = props.replyCount
   const likeCount = props.likeCount.toString();
-  let test_reply_count = 3;
+  // let test_reply_count = 3;
   
 
   return (
@@ -117,7 +118,7 @@ export default function ProfileThread(props : {username : string, profilePicture
                 />
 
                 {
-                  (test_reply_count === 1  || test_reply_count === 2 || test_reply_count === 3) &&
+                  parseInt(props.replyCount) != 0 &&
 
                   <div className="flex justify-center">
                     <div className="w-[1.5px] bg-[#c7c7c7] dark:bg-[#2f2f2f] rounded-full line" />
@@ -209,13 +210,14 @@ export default function ProfileThread(props : {username : string, profilePicture
 
         {
             // props.replyCount === 1 &&
-            test_reply_count === 1 &&
+            // test_reply_count === 1 &&
+            parseInt(props.replyCount) === 1 &&
 
           <>
             <div className="w-[40px] h-[35px] relative">
 
               <Image
-                  src='/assets/images/user.png'
+                  src={props.commentprofilepicture1}
                   width={22}
                   height={22}
                   alt="profile-icon"
@@ -224,24 +226,19 @@ export default function ProfileThread(props : {username : string, profilePicture
 
             </div>
 
-            <div className="flex gap-2 items-center text-gray-500 text-sm">
-              <p>{replyCount} replies</p>
-              <p className="pb-[7px]">.</p>
-              <p>{likeCount} likes</p>
-            </div>
-
           </>  
         }
 
         {
             // props.replyCount === 2 &&
-            test_reply_count === 2 &&
+            // test_reply_count === 2 &&
+            parseInt(props.replyCount) === 2 &&
 
           <>
             <div className="w-[40px] h-[35px] relative">
               <div className='p-[2px] w-[22px] h-[22px] absolute top-[6px] left-[4px] rounded-full'>
                 <Image
-                    src='/assets/images/user.png'
+                    src={props.commentprofilepicture1}
                     width={20}
                     height={20}
                     alt="profile-icon"
@@ -251,7 +248,7 @@ export default function ProfileThread(props : {username : string, profilePicture
 
               <div className='p-[2px] w-[22px] h-[22px] bg-white absolute top-[6px] left-[18px] rounded-full'>
                 <Image
-                    src='/assets/images/user.png'
+                    src={props.commentprofilepicture2}
                     width={20}
                     height={20}
                     alt="profile-icon"
@@ -260,23 +257,18 @@ export default function ProfileThread(props : {username : string, profilePicture
               </div>
             </div>
 
-            <div className="flex gap-2 items-center text-gray-500 text-sm">
-              <p>{replyCount} replies</p>
-              <p className="pb-[7px]">.</p>
-              <p>{likeCount} likes</p>
-            </div>
-
           </>  
         }
 
         {
+          parseInt(props.replyCount) === 3 &&
           // props.replyCount === 3 &&
-          test_reply_count === 3 &&
+          // test_reply_count === 3 &&
 
           <>
             <div className="w-[40px] h-[35px] relative">
               <Image
-                  src='/assets/images/user.png'
+                  src={props.commentprofilepicture1}
                   width={20}
                   height={20}
                   alt="profile-icon"
@@ -284,7 +276,7 @@ export default function ProfileThread(props : {username : string, profilePicture
               />
 
               <Image
-                  src='/assets/images/user.png'
+                  src={props.commentprofilepicture2}
                   width={16}
                   height={16}
                   alt="profile-icon"
@@ -292,7 +284,7 @@ export default function ProfileThread(props : {username : string, profilePicture
               />
 
               <Image
-                  src='/assets/images/user.png'
+                  src={props.commentprofilepicture3}
                   width={12}
                   height={12}
                   alt="profile-icon"
@@ -300,13 +292,39 @@ export default function ProfileThread(props : {username : string, profilePicture
               />
             </div>
 
-            <div className="flex gap-2 items-center text-gray-500 text-sm">
-              <p>{replyCount} replies</p>
+          </>  
+        }
+
+        { 
+        
+            parseInt(props.replyCount) === 0 ?
+
+            <div className="flex gap-2 items-center text-gray-500 text-sm ml-14 mt-2.5">
+
+              <Link href={`/thread/${props.id}`}>
+                <p>{replyCount} replies</p>
+              </Link>
+                    
               <p className="pb-[7px]">.</p>
+                        
               <p>{likeCount} likes</p>
+
             </div>
 
-          </>  
+          :
+
+            <div className="flex gap-2 items-center text-gray-500 text-sm">
+                
+              <Link href={`/thread/${props.id}`}>
+                <p>{replyCount} replies</p>
+              </Link>
+                    
+              <p className="pb-[7px]">.</p>
+                        
+              <p>{likeCount} likes</p>
+
+            </div>
+
         }
 
     </div>

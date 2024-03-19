@@ -2,21 +2,17 @@
 
 import Image from "next/image"
 import { useState , useEffect , useRef } from "react"
-import { UploadButton } from "@/utils/uploadthing"
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { X } from "lucide-react"
-import Skeleton from "react-loading-skeleton"
 import Loader from "./Loader"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/app/Redux/store"
 import axios from "axios"
 
-export function CommentDialog() {
-
+// Here, updateReplyCount is a prop which will be sent to the parent. Every time we make a new comment the number of reply count should go up by 1 in realtime to enable smooth user expereince.  
+export function CommentDialog(props : {threadId: number; threadUsername : string; updateReplyCount: (newCount: string) => void;})
+ {
   const [userThread, setUserThread] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [postImage,setPostImage] = useState<string>('');
-  const [imageLoading,setImageLoading] = useState(false);
   const [loading,setLoading] = useState(false);
   const [openDialog,setOpenDialog] = useState(false);
   const username = useSelector((state : RootState) => state.profileData.username);
@@ -31,6 +27,7 @@ export function CommentDialog() {
   },[userThread]);
 
   async function handleShare(){
+
     setLoading(true);
 
     // setTimeout(()=>{                // Fake Delay
@@ -38,17 +35,20 @@ export function CommentDialog() {
     //     setOpenDialog(false);
     // },3000);
 
-    const response = await axios.post('/api/postThread',{
-      image : postImage,
-      text : userThread,
-      currentUser : username,
-      currentUserProfilePicture : profilePicture
+    const response = await axios.post('/api/postComment',{
+      comment : userThread,
+      commentUser : username,
+      commentUserProfilePicuture : profilePicture,
+      threadId : props.threadId,
+      threadAuthor : props.threadUsername
     });
 
     if(response){
+      // So, every time we post a comment we update the reply count in the parent by sending the updated reply count to the parent as a prop
+      props.updateReplyCount(response.data.commentsCount);
       setLoading(false);
       setOpenDialog(false);
-      setUserThread(''); 
+      setUserThread('');    
     }
   }
 
@@ -134,7 +134,7 @@ export function CommentDialog() {
               />
             </div>
             
-            <textarea placeholder="Start a thread..." rows={1} className="bg-white dark:bg-[#171717] outline-none resize-none overflow-hidden mb-2 placeholder:text-[#afafaf]  dark:placeholder:text-[#7a7a7a]" value={userThread} onChange={(e) => setUserThread(e.target.value)} ref={textAreaRef} required/>
+            <textarea placeholder={`Reply to ${props.threadUsername}...`} rows={1} className="bg-white dark:bg-[#171717] outline-none resize-none overflow-hidden mb-2 placeholder:text-[#afafaf]  dark:placeholder:text-[#7a7a7a]" value={userThread} onChange={(e) => setUserThread(e.target.value)} ref={textAreaRef} required/>
 
           </div> 
 

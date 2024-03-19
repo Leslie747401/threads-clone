@@ -1,22 +1,17 @@
 'use client'
 
 import Image from "next/image"
-import { useState , useEffect , useRef, use } from "react"
-import { UploadButton } from "@/utils/uploadthing"
+import { useState , useEffect , useRef } from "react"
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
-import { X } from "lucide-react"
 import Loader from "./Loader"
-import Skeleton from "react-loading-skeleton"
 import { RootState } from "@/app/Redux/store"
 import { useSelector } from "react-redux"
 import axios from "axios"
 
-export function CommentDrawer() {
+export function CommentDrawer(props : {threadId: number; threadUsername : string; updateReplyCount: (newCount: string) => void;}) {
 
   const [userThread, setUserThread] = useState<string>('');
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [postImage,setPostImage] = useState<string>();
-  const [imageLoading,setImageLoading] = useState(false);
   const [loading,setLoading] = useState(false);
   const [openDrawer,setOpenDrawer] = useState(false);
   const username = useSelector((state : RootState) => state.profileData.username);
@@ -57,14 +52,16 @@ export function CommentDrawer() {
     //     setOpenDialog(false);
     // },3000);
 
-    const response = await axios.post('/api/postThread',{
-      image : postImage,
-      text : userThread,
-      currentUser : username,
-      currentUserProfilePicture : profilePicture
+    const response = await axios.post('/api/postComment',{
+      comment : userThread,
+      commentUser : username,
+      commentUserProfilePicuture : profilePicture,
+      threadId : props.threadId,
+      threadAuthor : props.threadUsername
     });
 
     if(response){
+      props.updateReplyCount(response.data.commentsCount);
       setLoading(false);
       setOpenDrawer(false);
       setUserThread(''); 
@@ -140,7 +137,7 @@ export function CommentDrawer() {
               />
           </div>
     
-          <textarea placeholder="Start a thread..." rows={1} className="bg-white dark:bg-[#171717] outline-none resize-none overflow-hidden mb-2 placeholder:text-[#afafaf]  dark:placeholder:text-[#7a7a7a]" value={userThread} onChange={(e) => setUserThread(e.target.value)} ref={textAreaRef} required/>  
+          <textarea placeholder={`Reply to ${props.threadUsername}...`} rows={1} className="bg-white dark:bg-[#171717] outline-none resize-none overflow-hidden mb-2 placeholder:text-[#afafaf]  dark:placeholder:text-[#7a7a7a]" value={userThread} onChange={(e) => setUserThread(e.target.value)} ref={textAreaRef} required/>  
 
         </div> 
 

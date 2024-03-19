@@ -41,7 +41,8 @@ export function FaketextboxDialog() {
     const response = await axios.post('/api/postThread',{
       image : postImage,
       text : userThread,
-      currentUser : username
+      currentUser : username,
+      currentUserProfilePicture : profilePicture
     });
 
     if(response){
