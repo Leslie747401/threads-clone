@@ -231,6 +231,7 @@ export default function Profile() {
             activeTab === 'Replies' &&
             getProfileComments && getProfileComments.map((c : profileComment) => (
                 <ProfileReplies
+                  key={c.created_at}
                   id={c.thread_id}
                   comment={c.comment}
                   commentuser={c.commentuser}

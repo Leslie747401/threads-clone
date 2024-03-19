@@ -302,6 +302,7 @@ export default function UserProfilePage({params} : {params : {username : string}
 
             getProfileComments && getProfileComments.map((c : profileComment) => (
               <ProfileReplies
+                key={c.created_at}
                 id={c.thread_id}
                 comment={c.comment}
                 commentuser={c.commentuser}

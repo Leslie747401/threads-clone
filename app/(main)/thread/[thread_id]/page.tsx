@@ -86,6 +86,7 @@ export default function ThreadsPage({params} : {params : {thread_id : string}}) 
          {
               comments && comments.map((c : Comment) => (
                   <Comment
+                      key={c.created_at}
                       comment={c.comment}
                       commentuser={c.commentuser}
                       commentuserprofilepicuture={c.commentuserprofilepicuture}
