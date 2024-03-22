@@ -34,7 +34,7 @@ export async function POST(request : NextRequest){
         }
     }
 
-    if(check_number_of_comments === '1'){
+    else if(check_number_of_comments === '1'){
 
         unstable_noStore();
         const response3 = await sql `INSERT INTO Comments (comment, commentUser, commentUserProfilePicuture, threadAuthor, thread_id, created_at) VALUES(${data.comment},${data.commentUser},${data.commentUserProfilePicuture},${data.threadAuthor},${data.threadId},${date_and_time})`;
@@ -55,7 +55,7 @@ export async function POST(request : NextRequest){
         }
     }
 
-    if(check_number_of_comments === '2'){
+    else if(check_number_of_comments === '2'){
 
         unstable_noStore();
         const response5 = await sql `INSERT INTO Comments (comment, commentUser, commentUserProfilePicuture, threadAuthor, thread_id, created_at) VALUES(${data.comment},${data.commentUser},${data.commentUserProfilePicuture},${data.threadAuthor},${data.threadId},${date_and_time})`;
@@ -75,4 +75,19 @@ export async function POST(request : NextRequest){
             }
         }
     }
+
+    else{
+
+        unstable_noStore();
+        await sql `INSERT INTO Comments (comment, commentUser, commentUserProfilePicuture, threadAuthor, thread_id, created_at) VALUES(${data.comment},${data.commentUser},${data.commentUserProfilePicuture},${data.threadAuthor},${data.threadId},${date_and_time})`;
+
+        const comments = await sql `SELECT COUNT (*) FROM Comments WHERE thread_id = ${data.threadId}`
+        const number_of_comments = comments.rows[0].count;
+
+        // Update the number of comments of a thread.
+        await sql `UPDATE Threads SET reply_count = ${number_of_comments} WHERE thread_id = ${data.threadId}`;
+        
+        return NextResponse.json({result:true,commentsCount:number_of_comments});
+    }
+
 }

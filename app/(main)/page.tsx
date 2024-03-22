@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setBio, setFullname, setHomeSkeletonLoading, setNumberOfFollowers, setNumberOfFollowing, setNumberOfThreads, setProfilePicture, setUsername, setprofileSkeletonLoading } from "../Redux/States/ProfileState/ProfileSlice";
 import { setNewBio, setNewFullname, setNewProfilePicture } from "../Redux/States/EditProfileState/EditProfileSlice";
 import { RootState } from "../Redux/store";
-import { setFollows } from "../Redux/States/ActivityState/ActivitySlice";
+import LoadMore from "@/components/LoadMore";
 
 export default async function Home() {
 
@@ -70,8 +70,7 @@ export default async function Home() {
     }
     
   },[session_data.session]);
-  // ,numberOfThreads,numberOfFollowers,numberOfFollowing
-
+  
   useEffect(() => {
     async function getHomeThread(){
       const response = await axios.post('/api/getHomeThreads',{
@@ -80,7 +79,7 @@ export default async function Home() {
         
       if(response){
           setGetHomeThreads(response.data.threads.rows);
-          console.log(response.data.threads.rows);    
+          console.log(response.data.threads.rows);              
       }
     }
 
@@ -89,36 +88,7 @@ export default async function Home() {
     }
     
   },[username]);
-
-  // useEffect(()=> {
-
-  //   async function getFollowNotification(){
-  //     const response = await axios.post('/api/getFollowNotification',{
-  //       username : username
-  //     });
-
-  //     if(response){
-  //       console.log(response.data.data.rows);
-        
-  //       response.data.data.rows.map((m:any)=>(
-  //         dispatch(setFollows(m))
-  //       ))
-  //     }
- 
-  //   }
-
-  //   if(username!=''){
-  //     getFollowNotification();
-  //   }
-
-  // },[username]);
-
-  // useEffect(() => {
-  //   console.log("allFollows:", allFollows);
-
-  // }, [allFollows]);
   
-
   return (
     <div className="sm:w-[65%] sm:mx-auto lg:w-[60%] xl:w-[40%] pt-[74px] sm:pt-12 pb-16">
 
@@ -126,45 +96,28 @@ export default async function Home() {
         getHomeThreads && <HomeTabs/>
       }
 
-      {/* {
-        <InfiniteScroll
-          dataLength={}
-        >
-          {
-            getHomeThreads && getHomeThreads.map((thread : homeThread)=>(
-              <HomeThread
-                key={thread.created_at}
-                threadUsername={thread.username}
-                profilePicture={thread.thread_profilepicture}
-                text={thread.thread_text}
-                image={thread.thread_image}
-                time={thread.created_at}
-                likeCount={thread.like_count}
-                replyCount={thread.reply_count}
-              />
-            ))
-          }
-        </InfiniteScroll>
-      } */}
+      {
+        getHomeThreads && getHomeThreads.map((thread : homeThread)=>(
+          <HomeThread
+            id={thread.thread_id}
+            key={thread.created_at}
+            threadUsername={thread.username}
+            profilePicture={thread.thread_profilepicture}
+            text={thread.thread_text}
+            image={thread.thread_image}
+            time={thread.created_at}
+            likeCount={thread.like_count}
+            replyCount={thread.reply_count}
+            commentprofilepicture1={thread.commentprofilepicture1}
+            commentprofilepicture2={thread.commentprofilepicture2}
+            commentprofilepicture3={thread.commentprofilepicture3}
+          />
+        ))
+      }
 
-          {
-            getHomeThreads && getHomeThreads.map((thread : homeThread)=>(
-              <HomeThread
-                id={thread.thread_id}
-                key={thread.created_at}
-                threadUsername={thread.username}
-                profilePicture={thread.thread_profilepicture}
-                text={thread.thread_text}
-                image={thread.thread_image}
-                time={thread.created_at}
-                likeCount={thread.like_count}
-                replyCount={thread.reply_count}
-                commentprofilepicture1={thread.commentprofilepicture1}
-                commentprofilepicture2={thread.commentprofilepicture2}
-                commentprofilepicture3={thread.commentprofilepicture3}
-              />
-            ))
-          }
+      {
+        getHomeThreads && <LoadMore/>
+      }
 
     </div>
   );
