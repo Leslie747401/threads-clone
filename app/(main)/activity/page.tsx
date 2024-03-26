@@ -2,62 +2,41 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import ActivityThread from '@/components/ActivityThread';
 import ActivityFollow from '@/components/ActivityFollow';
 import ActivityReplies from '@/components/ActivityReplies';
 // import { useEventListener } from '@/liveblocks.config';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/app/Redux/store';
 import axios from 'axios';
-import { setFollows } from '@/app/Redux/States/ActivityState/ActivitySlice';
-
 interface Follows {
+  activity_id : string;
+  activity_username : string;
+  activity_image : string;
   message: string;
-  image : string;
-  from : string;
+  created_at : string;
+  username : string;
 }
 
 interface Replies {
+  activity_id : string;
+  activity_username : string;
+  activity_image : string;
   message: string;
-  image : string;
+  created_at : string;
+  username : string;
+  thread_id : string;
 }
 
 export default function Activity() {
 
   const [activeButton, setActiveButton] = useState('All');
   const username = useSelector((state:RootState) => state.profileData.username);
-  const [allFollows, setAllFollows] = useState<Follows[]>([]); // Specify the type
-  const [allReplies, setAllReplies] = useState<Replies[]>([]); // Specify the type
-  const [seen,setSeen] = useState(true);
-  const [alreadySeen,setAlreadySeen] = useState(0);
-  const allFollowsArray = useSelector((state:RootState) => state.activity.allFollows);
-  console.log("AllFollowsArray : " + allFollowsArray);
-  const dispatch = useDispatch();
+  const [allFollows, setAllFollows] = useState<Follows[]>([]);
+  const [allReplies, setAllReplies] = useState<Replies[]>([]);
 
   const changeColor = (button : any) => {
     setActiveButton(button);
   };
-
-  // ------------LIVEBLOCKS----------
-  // useEventListener(({ event }) => {
-                        
-  //   if (event.type === 'Follows' && event.to === username) {
-
-  //     const {from,to,message,image} = event;
-  //     console.log("Event :");
-  //     console.log("From : " + from);
-  //     console.log("to : " + to);
-  //     console.log("Message : " + message);
- 
-  //     setAllFollows((prev: Follows[]) => [
-  //       ...prev,
-  //       { message, image, from }
-  //     ]);
-
-  //     setSeen(false);
-  //   }
-    
-  // });
 
   useEffect(()=> {
 
@@ -67,17 +46,36 @@ export default function Activity() {
       });
 
       // Only if the number of people that have followed has gone up only then we will update our follow array. If it remains the same then we dont have to store it in the array.
-      if(response.data.data.rows.length != allFollowsArray.length){
+      if(response.data.data.rows.length != allFollows.length){
         console.log(response.data.data.rows);
-        response.data.data.rows.map((m:any)=>(
-          dispatch(setFollows(m))
-        ))
+        setAllFollows((prev) => [...prev,...response.data.data.rows]);
       }
  
     }
 
     if(username!=''){
       getFollowNotification();
+    }
+
+  },[username]);
+
+  useEffect(()=> {
+
+    async function getCommentNotification(){
+      const response = await axios.post('/api/getCommentNotification',{
+        username : username
+      });
+
+      // Only if the number of people that have followed has gone up only then we will update our follow array. If it remains the same then we dont have to store it in the array.
+      if(response.data.data.rows.length != allReplies.length){
+        console.log(response.data.data.rows);
+        setAllReplies((prev) => [...prev,...response.data.data.rows])
+      }
+ 
+    }
+
+    if(username!=''){
+      getCommentNotification();
     }
 
   },[username]);
@@ -98,12 +96,49 @@ export default function Activity() {
         </div>
 
         {
-          activeButton === 'All' &&
+          activeButton === 'All' && (allFollows.length != 0 || allReplies.length != 0) && 
 
+          (
+            <>
+              <div>
+                {
+                  allFollows.map((f : Follows)=>(
+                    <ActivityFollow
+                      key={f.created_at}
+                      username={f.activity_username}
+                      image={f.activity_image}
+                      message={f.message}
+                      time={f.created_at}
+                    />
+                  ))
+                }
+              </div>
+              <div>
+                {
+                  allReplies.map((r : Replies)=>(
+                    <ActivityReplies
+                      key={r.created_at}
+                      username={r.activity_username}
+                      image={r.activity_image}
+                      message={r.message}
+                      time={r.created_at}
+                      thread_id={r.thread_id}
+                    />
+                  ))
+                }
+              </div>
+            </>
+          )
+          
+        }
+
+        {
+          activeButton === 'Follows' && allFollows.length != 0 && 
+          
           (
             <div>
               {
-                allFollowsArray.map((f)=>(
+                allFollows.map((f : Follows)=>(
                   <ActivityFollow
                     key={f.created_at}
                     username={f.activity_username}
@@ -118,18 +153,19 @@ export default function Activity() {
         }
 
         {
-          activeButton === 'Follows' &&
+          activeButton === 'Replies' && allReplies.length != 0 && 
 
           (
             <div>
               {
-                allFollowsArray.map((f)=>(
-                  <ActivityFollow
-                    key={f.created_at}
-                    username={f.activity_username}
-                    image={f.activity_image}
-                    message={f.message}
-                    time={f.created_at}
+                allReplies.map((r : Replies)=>(
+                  <ActivityReplies
+                    key={r.created_at}
+                    username={r.activity_username}
+                    image={r.activity_image}
+                    message={r.message}
+                    time={r.created_at}
+                    thread_id={r.thread_id}
                   />
                 ))
               }
@@ -137,16 +173,23 @@ export default function Activity() {
           )
         }
 
-        {
-          activeButton === 'Replies' &&
+        { 
+          activeButton === 'All' && allFollows.length == 0 && allReplies.length == 0 && 
+          
+            <p className='w-full flex justify-center mt-40'>No Activity yet</p>
+        }
 
-          <>
-            <ActivityReplies/>
-            <ActivityReplies/>
-            <ActivityReplies/>
-            <ActivityReplies/>
-            <ActivityReplies/>
-          </>    
+        {
+          activeButton === 'Follows' && allFollows.length == 0 &&
+          
+            <p className='w-full flex justify-center mt-40'>No Activity yet</p>
+
+        }
+
+        {
+          activeButton === 'Replies' && allReplies.length == 0 &&
+          
+          <p className='w-full flex justify-center mt-40'>No Activity yet</p>
         }
           
       </div>

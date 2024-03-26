@@ -268,7 +268,7 @@ export default function HomeThread(props : {id: number; threadUsername : string,
         }
 
         {
-          parseInt(props.replyCount) === 3 &&
+          parseInt(props.replyCount) >= 3 &&
           // test_reply_count === 3 &&
           // props.replyCount === '3' && 
 

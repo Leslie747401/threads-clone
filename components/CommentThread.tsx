@@ -269,7 +269,7 @@ export default function CommentThread(props : {id: number; threadUsername : stri
         }
 
         {
-          parseInt(props.replyCount) === 3 &&
+          parseInt(props.replyCount) >= 3 &&
           // props.replyCount === 3 &&
           // test_reply_count === 3 &&
 

@@ -8,7 +8,7 @@ export async function POST(request : NextRequest){
     console.log(data);
     
     unstable_noStore();
-    const followData = await sql `SELECT * FROM Activity WHERE username = ${data.username} and type = ${'Follow'}`;
+    const followData = await sql `SELECT * FROM Activity WHERE username = ${data.username} and type = ${'Comment'}`;
 
     return NextResponse.json({success:true,data:followData});
 }

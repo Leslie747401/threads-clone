@@ -64,7 +64,16 @@ export function CommentDrawer(props : {threadId: number; threadUsername : string
       props.updateReplyCount(response.data.commentsCount);
       setLoading(false);
       setOpenDrawer(false);
-      setUserThread(''); 
+      setUserThread('');
+
+      await axios.post('/api/postCommentNotification',{
+        username : props.threadUsername,
+        activity_username : username,
+        activity_image : profilePicture,
+        message : 'Commented on your thread',
+        type : 'Comment',
+        thread_id : props.threadId
+      });
     }
   }
 

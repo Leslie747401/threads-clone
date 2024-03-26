@@ -261,7 +261,7 @@ export default function ProfileThread(props : {username : string, profilePicture
         }
 
         {
-          parseInt(props.replyCount) === 3 &&
+          parseInt(props.replyCount) >= 3 &&
           // props.replyCount === 3 &&
           // test_reply_count === 3 &&
 

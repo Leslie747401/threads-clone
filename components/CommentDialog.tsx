@@ -40,7 +40,7 @@ export function CommentDialog(props : {threadId: number; threadUsername : string
       commentUser : username,
       commentUserProfilePicuture : profilePicture,
       threadId : props.threadId,
-      threadAuthor : props.threadUsername
+      threadAuthor : props.threadUsername,
     });
 
     if(response){
@@ -48,7 +48,16 @@ export function CommentDialog(props : {threadId: number; threadUsername : string
       props.updateReplyCount(response.data.commentsCount);
       setLoading(false);
       setOpenDialog(false);
-      setUserThread('');    
+      setUserThread('');
+      
+      await axios.post('/api/postCommentNotification',{
+        username : props.threadUsername,
+        activity_username : username,
+        activity_image : profilePicture,
+        message : 'Commented on your thread',
+        type : 'Comment',
+        thread_id : props.threadId
+      });
     }
   }
 
