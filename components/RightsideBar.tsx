@@ -1,7 +1,13 @@
 import { ModeToggle } from './Modetoggle'
 import { UserButton } from '@clerk/nextjs'
 import { currentUser } from "@clerk/nextjs";
-import UserFollowCard from './UserFollowCard';
+import RightSideUsers from './RightSideUsers';
+
+interface UserData {
+    username : string;
+    fullname : string;
+    profile_picture : string;  // Add other properties if needed
+}
 
 export default async function RightsideBar() {
   
@@ -33,27 +39,7 @@ export default async function RightsideBar() {
 
         <div className='flex flex-col gap-8 mb-10'></div>
 
-        <div className='flex flex-col gap-8 mb-10'>
-
-            <UserFollowCard
-                image='/assets/images/user.png'
-                fullname='Skylar Lawson'
-                username='Skylar_123'
-            />
-
-            <UserFollowCard
-                image='/assets/images/user.png'
-                fullname='Jackson Carter'
-                username='Jackson_123'
-            />
-
-            <UserFollowCard
-                image='/assets/images/user.png'
-                fullname='Benjamin Parker'
-                username='Benjamin_123'
-            />
-
-        </div>
+        <RightSideUsers/>
 
     </div>
   )

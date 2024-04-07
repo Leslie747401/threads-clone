@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import Image from 'next/image'
 import { Button } from './ui/button'
@@ -20,7 +22,7 @@ export default function UserFollowCard(props : {image: string | StaticImport , f
             </div>
         </div>
         
-        <Button variant='outline' className='px-4 font-semibold rounded-xl border dark:border dark:border-[#373737]'>Follow</Button>
+        <Button variant='outline' className='px-4 font-semibold rounded-xl border dark:border dark:border-[#373737]'>View</Button>
     </div>
   ) 
 }
