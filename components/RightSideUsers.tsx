@@ -40,7 +40,7 @@ export default function RightSideUsers() {
 
                 {
                     users && users.map((user : UserData)=>(
-                    <Link href={`/profile/${user.username}`}>
+                    <Link href={`/profile/${user.username}`} key={user.username}>
                         <UserFollowCard
                             key={user.username}
                             image={user.profile_picture}
