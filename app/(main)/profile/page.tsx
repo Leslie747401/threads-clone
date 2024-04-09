@@ -20,6 +20,7 @@ import { setBio, setFullname, setNumberOfFollowers, setNumberOfFollowing, setNum
 import { setNewBio, setNewFullname, setNewProfilePicture } from "@/app/Redux/States/EditProfileState/EditProfileSlice";
 import Image from "next/image";
 import moment from "moment";
+import { setAllComments, setAllThreads } from "@/app/Redux/States/DeleteState/DeleteSlice";
 
 interface profileThread {
   thread_text : string;
@@ -35,10 +36,11 @@ interface profileThread {
 
 interface profileComment {
   thread_id : Number;
+  commentid : Number;
   comment : string;
   commentuser: string;
   commentuserprofilepicuture : string;
-  created_at : string
+  created_at : string;
 }
 
 
@@ -60,6 +62,8 @@ export default function Profile() {
   const [loading2,setLoading2] = useState(true);
   const session_data = useSession();
   const dispatch = useDispatch();
+  const allThreads = useSelector((state : RootState) => state.delete.Threads);
+  const allComments = useSelector((state : RootState) => state.delete.Comments)
 
 
   // It is used to fetch profile data.
@@ -108,6 +112,8 @@ export default function Profile() {
       if(response){
         setLoading1(false);
         setGetProfileThreads(response.data.threads.rows);
+        dispatch(setAllThreads(response.data.threads.rows));
+        console.log("All Threads : ", allThreads);
       }
     }
 
@@ -115,7 +121,7 @@ export default function Profile() {
       getProfileThreads();
     }
 
-  },[]);
+  },[allThreads]);
 
   useEffect(() => {
     async function getProfileComments(){
@@ -126,7 +132,8 @@ export default function Profile() {
       if(response){
         setLoading2(false);
         setGetProfileComments(response.data.data.rows);
-        console.log(response.data.data.rows);
+        dispatch(setAllComments(response.data.data.rows));
+        console.log("Comments : ", response.data.data.rows);
         
       }
     }
@@ -135,7 +142,7 @@ export default function Profile() {
       getProfileComments();
     }
 
-  },[]);
+  },[allComments]);
 
 
   return (
@@ -198,7 +205,7 @@ export default function Profile() {
         
         :
           ( activeTab === 'Threads' &&
-            getprofileThreads && getprofileThreads.map((thread : profileThread)=>(
+            allThreads && allThreads.map((thread : profileThread)=>(
               <ProfileThread
                 id={thread.thread_id}
                 key={username}
@@ -229,10 +236,11 @@ export default function Profile() {
           {/* ( */}
         {
             activeTab === 'Replies' &&
-            getProfileComments && getProfileComments.map((c : profileComment) => (
+            allComments && allComments.map((c : profileComment) => (
                 <ProfileReplies
                   key={c.created_at}
-                  id={c.thread_id}
+                  threadId={c.thread_id}
+                  commentId={c.commentid}
                   comment={c.comment}
                   commentuser={c.commentuser}
                   commentuserprofilepicuture={c.commentuserprofilepicuture}

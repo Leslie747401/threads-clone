@@ -1,14 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { useRef ,useEffect } from 'react'
 import { Send } from 'lucide-react';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import moment from 'moment';
 import Link from 'next/link';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/app/Redux/store';
+import { toast } from './ui/use-toast';
+
+interface thread {
+  thread_id : number;
+}
 
 export default function ProfileThread(props : {username : string, profilePicture : string | StaticImport, text : string, image : string, time : string, likeCount : Number, replyCount : string, id : Number, commentprofilepicture1 : string, commentprofilepicture2 : string, commentprofilepicture3 : string;}) {
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const [dropdown,setDropdown] = useState(false);
+  const allThreads = useSelector((state : RootState) => state.delete.Threads);
 
   useEffect(() => {
     
@@ -98,8 +109,23 @@ export default function ProfileThread(props : {username : string, profilePicture
 
   const replyCount = props.replyCount
   const likeCount = props.likeCount.toString();
-  // let test_reply_count = 3;
+
+  async function handleDelete(threadId : any) {
   
+    console.log("Delete Thread : ", threadId);
+    console.log('Delete Clicked'); 
+
+    const response = await axios.post('/api/DeleteThread',{
+      id : threadId
+    });
+
+    console.log(response);
+
+    if(response){
+      allThreads.filter((t : thread) => t.thread_id !== threadId);
+      setDropdown(false);
+    }
+  }
 
   return (
     <>
@@ -127,10 +153,11 @@ export default function ProfileThread(props : {username : string, profilePicture
 
             </div>
             
-            <div className="w-[85%] sm:max-w-[83%] flex flex-col gap-1">
+            <div className="w-[85%] sm:max-w-[83%] flex flex-col relative">
             
                 {/* Name and time */}
-                <div className="w-full flex justify-between">
+                  <div className="w-full flex justify-between">
+
                     <div className='flex gap-[6px] items-center'>
                       <p className="font-medium">{props.username}</p>
                       <Image
@@ -140,8 +167,23 @@ export default function ProfileThread(props : {username : string, profilePicture
                         alt='icon'
                       />
                     </div>
-                    <p className="text-gray-400 text-sm">{timeSinceThreadPost}</p>
-                </div>
+                    
+                    <div className='flex gap-3 items-center'>
+                      <p className="text-gray-400 text-sm">{timeSinceThreadPost}</p>
+                      <div className='p-[5px] rounded-full hover:bg-[#ececec] dark:hover:bg-[#252525] transition-all' onClick={() => setDropdown(!dropdown)}>
+                        <DotsHorizontalIcon className='w-[20px] h-[20px]'/>
+                      </div>
+                    </div>
+
+                    {
+                      dropdown && 
+
+                      <div className='bg-white dark:bg-[#252525] absolute right-0 top-8 rounded-2xl border dark:border-0 shadow-lg cursor-pointer' onClick={() => {handleDelete(props.id)}}>
+                        <p className='text-red-500 font-medium p-3 pl-4 pr-12'>Delete</p>
+                      </div>
+                    }
+
+                  </div>
 
                 {/* Content and icons */}
                 <div ref={contentRef}>
@@ -209,8 +251,6 @@ export default function ProfileThread(props : {username : string, profilePicture
     <div className="flex gap-5 ml-6 mb-4">
 
         {
-            // props.replyCount === 1 &&
-            // test_reply_count === 1 &&
             parseInt(props.replyCount) === 1 &&
 
           <>
@@ -230,8 +270,6 @@ export default function ProfileThread(props : {username : string, profilePicture
         }
 
         {
-            // props.replyCount === 2 &&
-            // test_reply_count === 2 &&
             parseInt(props.replyCount) === 2 &&
 
           <>
@@ -262,8 +300,6 @@ export default function ProfileThread(props : {username : string, profilePicture
 
         {
           parseInt(props.replyCount) >= 3 &&
-          // props.replyCount === 3 &&
-          // test_reply_count === 3 &&
 
           <>
             <div className="w-[40px] h-[35px] relative">

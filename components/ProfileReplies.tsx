@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import moment from 'moment';
 import Link from 'next/link';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/Redux/store';
 
-export default function ProfileReplies(props : {id : Number, comment : string, commentuser: string, commentuserprofilepicuture : string, created_at : string}) {
+interface Comment {
+  commentid: number;
+}
+
+export default function ProfileReplies(props : {threadId : Number, commentId : Number, comment : string, commentuser: string, commentuserprofilepicuture : string, created_at : string}) {
 
   moment.updateLocale('en', {
     relativeTime: {
@@ -60,10 +68,29 @@ export default function ProfileReplies(props : {id : Number, comment : string, c
   });
 
   const timeSinceComment = moment(props.created_at).fromNow();
+  const [dropdown,setDropdown] = useState(false);
+  const allComments = useSelector((state : RootState) => state.delete.Comments);
+
+  async function handleDelete(commentId : any, threadId : any) {
+  
+    console.log("Delete Comment : ", commentId);
+
+    const response = await axios.post('/api/DeleteComment',{
+      commentId : commentId,
+      threadId : threadId
+    });
+
+    console.log(response);
+
+    if(response){
+      allComments.filter((c : Comment) => c.commentid !== commentId);
+      setDropdown(false);
+    }
+  }
 
 
   return (
-    <Link href={`/thread/${props.id}`}>
+    <>
 
       <div className="w-full sm:w-[94%] sm:mx-auto h-[1px] bg-gray-300 dark:bg-gray-600"/>
 
@@ -85,27 +112,55 @@ export default function ProfileReplies(props : {id : Number, comment : string, c
 
             </div>
             
-            <div className="w-[85%] sm:max-w-[83.5%] sm:w-full flex flex-col gap-1">
+            <div className="w-[85%] sm:max-w-[83.5%] sm:w-full flex flex-col">
             
               {/* Name and time */}
-              <div className="w-full flex justify-between">
-                <p className="font-medium">{props.commentuser}</p>
-                <p className="text-gray-400 text-sm">{timeSinceComment}</p>
+              <div className="w-full flex justify-between relative">
+
+                    <div className='flex gap-[6px] items-center'>
+                      <Link href={`/thread/${props.threadId}`}>
+                        <p className="font-medium">{props.commentuser}</p>
+                      </Link>
+                      <Image
+                        src='/assets/images/blue-tick.png'
+                        width={16}
+                        height={16}
+                        alt='icon'
+                      />
+                    </div>
+                    <div className='flex gap-3 items-center'>
+                      <p className="text-gray-400 text-sm">{timeSinceComment}</p>
+                      <div className='p-[5px] rounded-full hover:bg-[#ececec] dark:hover:bg-[#252525] transition-all' onClick={() => setDropdown(!dropdown)}>
+                        <DotsHorizontalIcon className='w-[20px] h-[20px]'/>
+                      </div>
+                    </div>
+
+                    {
+                      dropdown && 
+
+                      <div className='bg-white dark:bg-[#252525] absolute right-0 top-8 rounded-2xl border dark:border-0 shadow-lg cursor-pointer' onClick={() => {handleDelete(props.commentId,props.threadId)}}>
+                        <p className='text-red-500 font-medium p-3 pl-4 pr-12'>Delete</p>
+                      </div>
+                    }
+
               </div>
 
               {/* Following you line*/}
-              <div>
 
-                {/* overflow-wrap: break-word; i.e break-words in tailwind css to break the long word and continue it on the next line . Ex: Loremmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm */}
-                  <p className="break-words mb-4">{props.comment}</p>
-              
-              </div> 
-            
+              <Link href={`/thread/${props.threadId}`}>
+                <div>
+
+                  {/* overflow-wrap: break-word; i.e break-words in tailwind css to break the long word and continue it on the next line . Ex: Loremmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm */}
+                    <p className="break-words mb-4">{props.comment}</p>
+                
+                </div> 
+              </Link>
+
             </div>
     
         </div>
 
-    </Link>
+    </>
   )
 }
  

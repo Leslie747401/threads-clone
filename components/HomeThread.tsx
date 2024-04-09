@@ -324,6 +324,7 @@ export default function HomeThread(props : {id: number; threadUsername : string,
               <p>{likeCount} likes</p>
             
             </div>
+            
           :
 
             <div className="flex gap-2 items-center text-gray-500 text-sm">

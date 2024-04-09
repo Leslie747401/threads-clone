@@ -79,7 +79,7 @@ export default async function Home() {
         
       if(response){
           setGetHomeThreads(response.data.threads.rows);
-          console.log(response.data.threads.rows);              
+          console.log("Home Threads : ", response.data.threads.rows);              
       }
     }
 

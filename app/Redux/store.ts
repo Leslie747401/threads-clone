@@ -6,6 +6,7 @@ import editProfileReducer from './States/EditProfileState/EditProfileSlice'
 import dynamicUserReducer from './States/DynamicUserState/DynamicUserSlice'
 import activityReducer from './States/ActivityState/ActivitySlice'
 import commentReducer from './States/CommentState/CommentSlice'
+import deleteReducer from './States/DeleteState/DeleteSlice'
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ export const store = configureStore({
     editProfileData : editProfileReducer,
     dynamicUser : dynamicUserReducer,
     activity : activityReducer,
-    comment : commentReducer
+    comment : commentReducer,
+    delete : deleteReducer
   },
 })
 
