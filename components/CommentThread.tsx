@@ -160,30 +160,31 @@ export default function CommentThread(props : {id: number; threadUsername : stri
                       />
                     </div>
                     
-                    {/* <div className="flex gap-4 ml-1"> */}
+                    <div className="flex gap-4 ml-1">
 
                     {/* Heart icon for Black Mode */}
-                    {/* <Image
+                    <Image
                         src='/assets/images/white-activity.png'
                         width={20}
                         height={20}
                         alt="logo"
                         className="hidden dark:block"
-                    /> */}
+                    />
 
                     {/* Heart icon for White Mode */}
-                    {/* <Image
+                    <Image
                         src='/assets/images/black-activity.png'
                         width={20}
                         height={20}
                         alt="logo"
                         className="dark:hidden"
-                    /> */}
+                    />
 
-                    {/* {isMobile ? 
+                    {isMobile ? 
                         <CommentDrawer
                           threadId={props.id}
                           threadUsername={props.threadUsername}
+                          updateReplyCount={setReplyCount}
                         /> 
                       : 
     
@@ -192,11 +193,11 @@ export default function CommentThread(props : {id: number; threadUsername : stri
                             threadUsername={props.threadUsername}
                             updateReplyCount={setReplyCount}
                         />
-                    } */}
+                    }
 
-                    {/* {isMobile ? <ShareThreadDrawer/>  : <ShareThreadDialog/>} */}
+                    {isMobile ? <ShareThreadDrawer/>  : <ShareThreadDialog/>}
 
-                {/* </div> */}
+                </div>
 
             </div> 
             

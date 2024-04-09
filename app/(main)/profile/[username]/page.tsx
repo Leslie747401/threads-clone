@@ -32,10 +32,11 @@ interface profileThread {
 
 interface profileComment {
   thread_id : Number;
+  commentid : Number;
   comment : string;
   commentuser: string;
   commentuserprofilepicuture : string;
-  created_at : string
+  created_at : string;
 }
 
 export default function UserProfilePage({params} : {params : {username : string}}) {
@@ -303,7 +304,8 @@ export default function UserProfilePage({params} : {params : {username : string}
             getProfileComments && getProfileComments.map((c : profileComment) => (
               <ProfileReplies
                 key={c.created_at}
-                id={c.thread_id}
+                threadId={c.thread_id}
+                commentId={c.commentid}
                 comment={c.comment}
                 commentuser={c.commentuser}
                 commentuserprofilepicuture={c.commentuserprofilepicuture}
