@@ -8,6 +8,7 @@ import ActivityReplies from '@/components/ActivityReplies';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/Redux/store';
 import axios from 'axios';
+import Loader from '@/components/Loader';
 interface Follows {
   activity_id : string;
   activity_username : string;
@@ -33,6 +34,7 @@ export default function Activity() {
   const username = useSelector((state:RootState) => state.profileData.username);
   const [allFollows, setAllFollows] = useState<Follows[]>([]);
   const [allReplies, setAllReplies] = useState<Replies[]>([]);
+  const [loading,setLoading] = useState(true);
 
   const changeColor = (button : any) => {
     setActiveButton(button);
@@ -49,6 +51,7 @@ export default function Activity() {
       if(response.data.data.rows.length != allFollows.length){
         console.log(response.data.data.rows);
         setAllFollows((prev) => [...prev,...response.data.data.rows]);
+        setLoading(false);
       }
  
     }
@@ -69,7 +72,8 @@ export default function Activity() {
       // Only if the number of people that have followed has gone up only then we will update our follow array. If it remains the same then we dont have to store it in the array.
       if(response.data.data.rows.length != allReplies.length){
         console.log(response.data.data.rows);
-        setAllReplies((prev) => [...prev,...response.data.data.rows])
+        setAllReplies((prev) => [...prev,...response.data.data.rows]);
+        setLoading(false);
       }
  
     }
@@ -96,7 +100,15 @@ export default function Activity() {
         </div>
 
         {
-          activeButton === 'All' && (allFollows.length != 0 || allReplies.length != 0) && 
+          loading && 
+
+          <div className='w-full flex justify-center mt-28'>
+            <Loader/>
+          </div>
+        }
+
+        {
+          activeButton === 'All' && (allFollows.length != 0 || allReplies.length != 0) && !loading &&
 
           (
             <>
@@ -133,7 +145,7 @@ export default function Activity() {
         }
 
         {
-          activeButton === 'Follows' && allFollows.length != 0 && 
+          activeButton === 'Follows' && allFollows.length != 0 && !loading &&
           
           (
             <div>
@@ -153,7 +165,7 @@ export default function Activity() {
         }
 
         {
-          activeButton === 'Replies' && allReplies.length != 0 && 
+          activeButton === 'Replies' && allReplies.length != 0 && !loading &&
 
           (
             <div>
@@ -174,20 +186,20 @@ export default function Activity() {
         }
 
         { 
-          activeButton === 'All' && allFollows.length == 0 && allReplies.length == 0 && 
+          activeButton === 'All' && allFollows.length == 0 && allReplies.length == 0 && !loading &&
           
             <p className='w-full flex justify-center mt-40'>No Activity yet</p>
         }
 
         {
-          activeButton === 'Follows' && allFollows.length == 0 &&
+          activeButton === 'Follows' && allFollows.length == 0 && !loading &&
           
             <p className='w-full flex justify-center mt-40'>No Activity yet</p>
 
         }
 
         {
-          activeButton === 'Replies' && allReplies.length == 0 &&
+          activeButton === 'Replies' && allReplies.length == 0 && !loading &&
           
           <p className='w-full flex justify-center mt-40'>No Activity yet</p>
         }
