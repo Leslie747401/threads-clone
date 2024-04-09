@@ -5,7 +5,8 @@ export const DeleteSlice = createSlice({
   name: 'Delete',
   initialState: {
     Threads: [],
-    Comments: []
+    Comments: [],
+    SingleThreadComments: []
   },
   reducers: {
     setAllThreads: (state, action) => {
@@ -14,8 +15,11 @@ export const DeleteSlice = createSlice({
     setAllComments: (state, action) => {
       state.Comments = action.payload;
     },
+    setSingleThreadComments: (state, action) => {
+      state.SingleThreadComments = action.payload;
+    },
   },
 });
 
-export const { setAllThreads, setAllComments } = DeleteSlice.actions;
+export const { setAllThreads, setAllComments, setSingleThreadComments } = DeleteSlice.actions;
 export default DeleteSlice.reducer;

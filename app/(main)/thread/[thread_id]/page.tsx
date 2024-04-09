@@ -1,9 +1,12 @@
 'use client'
 
+import { setSingleThreadComments } from "@/app/Redux/States/DeleteState/DeleteSlice";
+import { RootState } from "@/app/Redux/store";
 import Comment from "@/components/Comment";
 import CommentThread from "@/components/CommentThread";
 import axios from "axios";
 import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux";
 
 interface Thread {
     thread_id : number;
@@ -30,6 +33,8 @@ export default function ThreadsPage({params} : {params : {thread_id : string}}) 
 
   const [thread,setThread] = useState<Thread[]>([]);
   const [comments,setComments] = useState<Comment[]>([]);
+  const singleThreadComments = useSelector((state : RootState) => state.delete.SingleThreadComments);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function getThread(){
@@ -51,11 +56,12 @@ export default function ThreadsPage({params} : {params : {thread_id : string}}) 
       });
       console.log(response.data.data.rows);
       setComments(response.data.data.rows);
+      dispatch(setSingleThreadComments(response.data.data.rows));
     }
 
     getComments();
 
-  },[]);
+  },[singleThreadComments]);
 
   return (
     <div className="sm:w-[65%] sm:mx-auto lg:w-[60%] xl:w-[40%] pt-[74px] sm:pt-12 pb-16">
@@ -84,7 +90,7 @@ export default function ThreadsPage({params} : {params : {thread_id : string}}) 
 
         <div>
          {
-              comments && comments.map((c : Comment) => (
+              singleThreadComments && singleThreadComments.map((c : Comment) => (
                   <Comment
                       key={c.created_at}
                       comment={c.comment}

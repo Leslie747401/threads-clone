@@ -122,6 +122,8 @@ export default function ProfileThread(props : {username : string, profilePicture
     console.log(response);
 
     if(response){
+
+      // Here, Once we get the reponse that the thread is deleted from the database we render the UI to show that that the thread is deleted by filtering that thread from the array. 
       allThreads.filter((t : thread) => t.thread_id !== threadId);
       setDropdown(false);
     }
@@ -199,47 +201,47 @@ export default function ProfileThread(props : {username : string, profilePicture
                       />
                     </div>
                     
-                    <div className="flex gap-4 ml-1">
+                    {/* <div className="flex gap-4 ml-1"> */}
 
                     {/* Heart icon for Black Mode */}
-                    <Image
+                    {/* <Image
                         src='/assets/images/white-activity.png'
                         width={20}
                         height={20}
                         alt="logo"
                         className="hidden dark:block"
-                    />
+                    /> */}
 
                     {/* Heart icon for White Mode */}
-                    <Image
+                    {/* <Image
                         src='/assets/images/black-activity.png'
                         width={20}
                         height={20}
                         alt="logo"
                         className="dark:hidden"
-                    />
+                    /> */}
 
                     {/* Comment icon for Black Mode */}
-                    <Image
+                    {/* <Image
                         src='/assets/images/white-comment.png'
                         width={18}
                         height={18}
                         alt="logo"
                         className="hidden dark:block"
-                    />
+                    /> */}
 
                     {/* Comment icon for White Mode */}
-                    <Image
+                    {/* <Image
                         src='/assets/images/black-comment.png'
                         width={18}
                         height={18}
                         alt="logo"
                         className="dark:hidden"
-                    />
+                    /> */}
 
-                    <Send width={18} height={18}/>
+                    {/* <Send width={18} height={18}/> */}
 
-                </div>
+                {/* </div> */}
 
             </div> 
             
@@ -335,7 +337,7 @@ export default function ProfileThread(props : {username : string, profilePicture
         
             parseInt(props.replyCount) === 0 ?
 
-            <div className="flex gap-2 items-center text-gray-500 text-sm ml-14 mt-2.5">
+            <div className="flex gap-2 items-center text-gray-500 text-sm ml-14 mt-1.5">
 
               <Link href={`/thread/${props.id}`}>
                 <p>{replyCount} replies</p>
