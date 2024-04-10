@@ -349,7 +349,7 @@ interface Feed {
   thread_text: string;
   thread_image: string;
   created_at: string;
-  like_count: Number;
+  like_count: string;
   reply_count: string;
   commentprofilepicture1: string;
   commentprofilepicture2: string;
