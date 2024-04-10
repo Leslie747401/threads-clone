@@ -83,8 +83,19 @@ export default function Comment(props : {comment : string, commentuser: string, 
             
               {/* Name and time */}
               <div className="w-full flex justify-between">
-                <p className="font-medium">{props.commentuser}</p>
+
+                <div className='flex gap-[6px] items-center'>
+                  <p className="font-medium">{props.commentuser}</p>
+                  <Image
+                    src='/assets/images/blue-tick.png'
+                    width={16}
+                    height={16}
+                    alt='icon'
+                  />
+                </div>
+                
                 <p className="text-gray-400 text-sm">{timeSinceComment}</p>
+                
               </div>
 
               {/* Following you line*/}

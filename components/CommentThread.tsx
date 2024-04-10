@@ -10,8 +10,11 @@ import { CommentDialog } from './CommentDialog';
 import { useMediaQuery } from 'react-responsive';
 import { ShareThreadDrawer } from './ShareThreadDrawer';
 import { CommentDrawer } from './CommentDrawer';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/Redux/store';
+import axios from 'axios';
 
-export default function CommentThread(props : {id: number; threadUsername : string, threadProfilePicture : string, text : string, image : string, time : string, likeCount : Number, replyCount : string, commentprofilepicture1 : string, commentprofilepicture2 : string, commentprofilepicture3 : string;}) {
+export default function CommentThread(props : {id: number; threadUsername : string, threadProfilePicture : string, text : string, image : string, time : string, likeCount : string, replyCount : string, commentprofilepicture1 : string, commentprofilepicture2 : string, commentprofilepicture3 : string;}) {
 
   const contentRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery({ maxWidth : 640 });
@@ -102,8 +105,77 @@ export default function CommentThread(props : {id: number; threadUsername : stri
   console.log(timeSinceThreadPost);
 
   const [replyCount,setReplyCount] = useState(props.replyCount);
-  const likeCount = props.likeCount.toString();
-  // let test_reply_count = 3;
+  // const likeCount = props.likeCount.toString();
+  const [isliked,setIsLiked] = useState(false);
+  const loggedInUser = useSelector((state : RootState) => state.profileData.username);
+  // const [loading,setLoading] = useState(false);
+  const [likeCount,setLikeCount] = useState(props.likeCount);
+
+
+    // When HomeThreads are being rendered for the first time, for every thread we check that whether the current logged in user has already liked the thread or not.
+    useEffect(() => {
+
+      async function likeExists(){
+        const response = await axios.post('/api/likeExists',{
+          threadId : props.id,
+          currentUser: loggedInUser 
+        });
+    
+        if(response.data.likeExists){
+          setIsLiked(true);
+        }
+    
+        else{
+          setIsLiked(false);
+        }
+    
+      }
+    
+      likeExists();
+    
+    },[]);
+  
+    async function Like(){
+  
+      const response = await axios.post('/api/Like', {
+        threadId : props.id,
+        currentUser: loggedInUser 
+      });
+    
+      if(response){
+        // setLoading(false);
+        setIsLiked(true);
+        setLikeCount(response.data.updatedlikes);
+      }
+    }
+  
+    async function Unlike(){
+  
+      const response = await axios.post('/api/Unlike', {
+        threadId : props.id,
+        currentUser: loggedInUser 
+      });
+    
+      if(response){
+        // setLoading(false);
+        setIsLiked(false);
+        setLikeCount(response.data.updatedlikes);
+      }
+    }
+  
+    function handleLike() {
+  
+      // setLoading(true);
+      
+      if(isliked == false){
+        Like();
+      } 
+      
+      else {
+        Unlike();
+      }
+    
+    }
   
   return (
     <>
@@ -162,42 +234,64 @@ export default function CommentThread(props : {id: number; threadUsername : stri
                     
                     <div className="flex gap-4 ml-1">
 
-                    {/* Heart icon for Black Mode */}
-                    <Image
-                        src='/assets/images/white-activity.png'
-                        width={20}
-                        height={20}
-                        alt="logo"
-                        className="hidden dark:block"
-                    />
+                      {
+                          isliked ? 
 
-                    {/* Heart icon for White Mode */}
-                    <Image
-                        src='/assets/images/black-activity.png'
-                        width={20}
-                        height={20}
-                        alt="logo"
-                        className="dark:hidden"
-                    />
+                            <Image
+                              src='/assets/images/LikedHeart.png'
+                              width={20}
+                              height={20}
+                              alt='logo'
+                              className='cursor-pointer'
+                              onClick={handleLike}
+                            />
 
-                    {isMobile ? 
-                        <CommentDrawer
-                          threadId={props.id}
-                          threadUsername={props.threadUsername}
-                          updateReplyCount={setReplyCount}
-                        /> 
-                      : 
-    
-                        <CommentDialog  
-                            threadId={props.id}
-                            threadUsername={props.threadUsername}
-                            updateReplyCount={setReplyCount}
-                        />
-                    }
+                          :
 
-                    {isMobile ? <ShareThreadDrawer/>  : <ShareThreadDialog/>}
+                            <>
 
-                </div>
+                              {/* Heart icon for Black Mode */}
+                              <Image
+                                src='/assets/images/white-activity.png'
+                                width={20}
+                                height={20}
+                                alt="logo"
+                                className="hidden dark:block cursor-pointer"
+                                onClick={handleLike}
+                              />
+
+                              {/* Heart icon for White Mode */}
+                              <Image
+                                src='/assets/images/black-activity.png'
+                                width={20}
+                                height={20}
+                                alt="logo"
+                                className="dark:hidden cursor-pointer"
+                                onClick={handleLike}
+                              />
+
+                            </>
+
+                        }
+
+                        {isMobile ? 
+                            <CommentDrawer
+                              threadId={props.id}
+                              threadUsername={props.threadUsername}
+                              updateReplyCount={setReplyCount}
+                            /> 
+                          : 
+        
+                            <CommentDialog  
+                                threadId={props.id}
+                                threadUsername={props.threadUsername}
+                                updateReplyCount={setReplyCount}
+                            />
+                        }
+
+                        {isMobile ? <ShareThreadDrawer/>  : <ShareThreadDialog/>}
+
+                    </div>
 
             </div> 
             
