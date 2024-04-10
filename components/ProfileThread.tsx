@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { useRef ,useEffect } from 'react'
-import { Send } from 'lucide-react';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import moment from 'moment';
 import Link from 'next/link';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/app/Redux/store';
-import { toast } from './ui/use-toast';
 
 interface thread {
   thread_id : number;

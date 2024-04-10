@@ -25,7 +25,7 @@ export default async function Home() {
     thread_text : string;
     thread_image : string;
     created_at : string
-    like_count : Number;
+    like_count : String;
     reply_count : string;
     commentprofilepicture1 : string;
     commentprofilepicture2 : string;

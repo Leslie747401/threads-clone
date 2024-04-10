@@ -7,14 +7,22 @@ import moment from 'moment';
 import Link from 'next/link';
 import { ShareThreadFromHomeDesktop } from './ShareThreadFromHomeDesktop';
 import { CommentDialog } from './CommentDialog';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/Redux/store';
+import axios from 'axios';
 
-export default function HomeThread(props : {id: number; threadUsername : string, profilePicture : string, text : string, image : string, time : string, likeCount : Number, replyCount : string, commentprofilepicture1 : string, commentprofilepicture2 : string, commentprofilepicture3 : string;}) {
+export default function HomeThread(props : {id: number; threadUsername : string, profilePicture : string, text : string, image : string, time : string, likeCount : String, replyCount : string, commentprofilepicture1 : string, commentprofilepicture2 : string, commentprofilepicture3 : string;}) {
 
   const contentRef = useRef<HTMLDivElement>(null);
 
   // There reason why i am recieving the data from the child (CommentDialog.tsx , CommentDrawer.tsx and CommentThread.tsx) instead of using redux because when i am storing the props.replyCount in a variable. Since, there are n number of thread all the thread are taking the same value and not different values specific to a individual thread.
 
   const [replyCount,setReplyCount] = useState(props.replyCount);
+  const timeSinceThreadPost = moment(props.time).fromNow();
+  const [isliked,setIsLiked] = useState(false);
+  const loggedInUser = useSelector((state : RootState) => state.profileData.username);
+  // const [loading,setLoading] = useState(false);
+  const [likeCount,setLikeCount] = useState(props.likeCount);
 
   useEffect(() => {
     
@@ -98,11 +106,70 @@ export default function HomeThread(props : {id: number; threadUsername : string,
       }
   });
 
-  const timeSinceThreadPost = moment(props.time).fromNow();
-  console.log(timeSinceThreadPost);
+  // When HomeThreads are being rendered for the first time, for every thread we check that whether the current logged in user has already liked the thread or not.
+  useEffect(() => {
 
-  const likeCount = props.likeCount.toString();
-  let test_reply_count = 3;
+    async function likeExists(){
+      const response = await axios.post('/api/likeExists',{
+        threadId : props.id,
+        currentUser: loggedInUser 
+      });
+  
+      if(response.data.likeExists){
+        setIsLiked(true);
+      }
+  
+      else{
+        setIsLiked(false);
+      }
+  
+    }
+  
+    likeExists();
+  
+  },[]);
+
+  async function Like(){
+
+    const response = await axios.post('/api/Like', {
+      threadId : props.id,
+      currentUser: loggedInUser 
+    });
+  
+    if(response){
+      // setLoading(false);
+      setIsLiked(true);
+      setLikeCount(response.data.updatedlikes);
+    }
+  }
+
+  async function Unlike(){
+
+    const response = await axios.post('/api/Unlike', {
+      threadId : props.id,
+      currentUser: loggedInUser 
+    });
+  
+    if(response){
+      // setLoading(false);
+      setIsLiked(false);
+      setLikeCount(response.data.updatedlikes);
+    }
+  }
+
+  function handleLike() {
+
+    // setLoading(true);
+    
+    if(isliked == false){
+      Like();
+    } 
+    
+    else {
+      Unlike();
+    }
+  
+  }
   
   return (
     <>
@@ -169,31 +236,57 @@ export default function HomeThread(props : {id: number; threadUsername : string,
                     
                     <div className="flex gap-4 ml-1">
 
-                    {/* Heart icon for Black Mode */}
-                    <Image
-                        src='/assets/images/white-activity.png'
-                        width={20}
-                        height={20}
-                        alt="logo"
-                        className="hidden dark:block"
-                    />
+                      {/* {
+                        loading && <Skeleton width={20} height={20}/>
+                      } */}
 
-                    {/* Heart icon for White Mode */}
-                    <Image
-                        src='/assets/images/black-activity.png'
-                        width={20}
-                        height={20}
-                        alt="logo"
-                        className="dark:hidden"
-                    />
+                      {
+                        isliked ? 
 
-                    <CommentDialog
-                      threadId={props.id}
-                      threadUsername={props.threadUsername}
-                      updateReplyCount={setReplyCount}
-                    />
+                          <Image
+                            src='/assets/images/LikedHeart.png'
+                            width={20}
+                            height={20}
+                            alt='logo'
+                            className='cursor-pointer'
+                            onClick={handleLike}
+                          />
 
-                    <ShareThreadFromHomeDesktop extended_url={`thread/${props.id}`}/>
+                        :
+
+                          <>
+
+                            {/* Heart icon for Black Mode */}
+                            <Image
+                              src='/assets/images/white-activity.png'
+                              width={20}
+                              height={20}
+                              alt="logo"
+                              className="hidden dark:block cursor-pointer"
+                              onClick={handleLike}
+                            />
+
+                            {/* Heart icon for White Mode */}
+                            <Image
+                              src='/assets/images/black-activity.png'
+                              width={20}
+                              height={20}
+                              alt="logo"
+                              className="dark:hidden cursor-pointer"
+                              onClick={handleLike}
+                            />
+
+                          </>
+
+                      }
+                    
+                      <CommentDialog
+                        threadId={props.id}
+                        threadUsername={props.threadUsername}
+                        updateReplyCount={setReplyCount}
+                      />
+
+                      <ShareThreadFromHomeDesktop extended_url={`thread/${props.id}`}/>
 
                 </div>
 
@@ -296,7 +389,8 @@ export default function HomeThread(props : {id: number; threadUsername : string,
                 />
               }
 
-              { props.commentprofilepicture3 &&
+              { 
+                props.commentprofilepicture3 &&
                 <Image
                   src={props.commentprofilepicture3}
                   width={12}
