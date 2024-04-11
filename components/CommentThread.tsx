@@ -304,8 +304,6 @@ export default function CommentThread(props : {id: number; threadUsername : stri
 
         {
           parseInt(props.replyCount) === 1 &&
-            // props.replyCount === 1 &&
-            // test_reply_count === 1 &&
 
           <>
             <div className="w-[40px] h-[35px] relative">
