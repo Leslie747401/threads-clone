@@ -18,7 +18,7 @@ export default function MobileFooter() {
       {
         isMobile && 
         // bg-opacity-65 dark:bg-opacity-65 backdrop-blur-3xl
-        <div className='fixed bottom-0 w-full bg-white dark:bg-[#121212] sm:hidden'>
+        <div className='fixed bottom-0 w-full bg-white dark:bg-[#121212] sm:hidden border-t dark:border-t-[#212121] z-[30]'>
 
           <ul className="flex justify-between py-5 mx-10">
             <li>
